@@ -2,14 +2,16 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
+var config = require('./config/config');
 var app = express();
 var flash = require('flash');
 var port = process.env.PORT || 8080;
+var env = config.development;
 
 //Database and ORM modules
 var pg = require('pg');
 var Sequelize = require('sequelize');
-var conString = "postgres://rohit:password@localhost:5432/thunderingballoons";
+var conString = env.dialect+'://'+env.username+':'+env.password+'@'+env.host+':'+env.port+'/'+env.database;
 var sequelize = new Sequelize(conString, {
   dialect: 'postgres',
 });
