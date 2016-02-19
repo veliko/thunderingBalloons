@@ -8,6 +8,9 @@ var flash = require('flash');
 var port = process.env.PORT || 8080;
 var env = config.development;
 
+//OAUTH modules for yelp api
+var OAuth = require('oauth');
+
 //Database and ORM modules
 var pg = require('pg');
 var Sequelize = require('sequelize');
