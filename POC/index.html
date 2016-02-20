@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      html, body { height: 100%; margin: 0; padding: 0; background-color: #ececec}
+      #map { 
+        width: 100%; 
+        height: 50%; 
+      }
+
+      .addresses { 
+        width: 300px;
+        float: left;
+        margin-left: 20%;
+        margin-right: 20px;
+        padding-top: 10px
+      }
+
+      .addressbox { 
+        margin-top: 20px;
+        margin-right: 20px; 
+        width: 283px; 
+        height: 30px; 
+        background: none; 
+        float: left;
+        border: solid 3px #bbb;
+        padding-left: 10px;
+        font-size: 15px;
+        color: #666;
+        outline: none;
+      }
+
+      .keyword {
+        margin-top: 20px;
+        margin-right: 20px; 
+        width: 283px; 
+        height: 30px; 
+        float: left;
+        border: solid 3px #bbb;
+        padding-left: 10px;
+        font-size: 15px;
+        color: #666;
+        outline: none;
+        background-color: #fff;
+        border-color: #ccc;
+      }
+
+      .submitbtn {
+        float: right;
+        width: 100px;
+        height: 38px;
+        margin-top: 20px;
+        box-sizing: border-box;
+        border: none;
+        background-color: #4CBB17;
+        color: #ececec;
+        font-size: 15px;
+        font-weight: 100;
+        letter-spacing: 1px;
+        outline: none;
+      }
+
+      .searchresults {
+        width: 30%;
+        margin-top: 30px;
+        float: left;
+      }
+
+      .entry {
+        color: #666;
+        height: 60px;
+        margin-bottom: 5px;
+      }
+
+      .entryimage {
+        width: 60px;
+        height: 60px;
+        float: left;
+        border-radius: 20px;
+        margin-right: 5px;
+      }
+
+      .ratingimage {
+        float: left;
+        margin-top: 5px;
+        padding: 0;
+        clear: right;
+      }
+
+      .entry h3 {
+        margin-top: 5px;
+        margin-left: 5px;
+        font-family: sans-serif;
+        font-size: 15px;
+        line-height: 15px;
+        font-weight: 500;
+        -webkit-margin-before: 0em;
+        -webkit-margin-after: 0em;
+      }
+
+      .entry h4 {
+        position: absolute;
+        margin-left: 65px;
+        padding-top: 22px;
+        text-align: left;
+        font-family: sans-serif;
+        font-size: 13px;
+        font-weight: 200;
+        -webkit-margin-before: 0em;
+        -webkit-margin-after: 0em;
+      }
+
+      h1 {
+        color: #666;
+        font-size: 35px;
+        font-family: sans-serif;
+        font-weight: 100;
+        line-height: 42px;
+        margin: 0;
+        padding: 0;
+        margin-bottom: 10px;
+        -webkit-margin-before: none;
+        -webkit-margin-after: none;
+      }
+    </style>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script> 
+    <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/sha1.js"></script>
+    <script type="text/javascript" src="http://oauth.googlecode.com/svn/code/javascript/oauth.js"></script>
+    <script type="text/javascript" src="yelp.js"></script>
+  </head>
+  <body>
+    
+
+    
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB2DdGH2NH4ym4Mg-nRa0XzIvL1nc1TsIA&callback=initMap">
+    </script>
+    <script type="text/javascript"></script>
+    
+    <div id="map"></div>
+    <form class="addresses">
+        <input type="text" class="keyword" placeholder="Search for" />
+        <input type="text" class="addressbox"placeholder="Enter address" />
+        <input type="text" class="addressbox"placeholder="Enter address" />
+        <input type="text" class="addressbox"placeholder="Enter address" />
+        <input type="text" class="addressbox"placeholder="Enter address" />
+        <input type="text" class="addressbox"placeholder="Enter address" />
+        <button class="submitbtn" type="submit">SUBMIT</button>
+    </form>
+
+    <div class="searchresults">
+      <h1> Search Results </h1>
+    </div>
+
+    <script type="text/javascript">
+
+
+        ///////////////////////////////////////
+        // initialize map
+        ///////////////////////////////////////
+        var map;
+        function initMap() {
+
+          ////////////////////////////////////////
+          // create map, geoCoder, and bounds
+          ////////////////////////////////////////
+          var geoCoder = new google.maps.Geocoder();
+          map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 15
+          });
+
+          /////////////////////////////////
+          // center map on an address in SF
+          /////////////////////////////////
+          geoCoder.geocode({
+            address: "439 Mangels Ave, San Francisco, CA 94127",
+          }, function(response){
+            // console.log("Geocoder response: ", response);
+            var lat = response[0].geometry.location.lat();
+            var lng = response[0].geometry.location.lng();
+            var latlng = new google.maps.LatLng( lat, lng );
+            map.setCenter(latlng);
+          });
+
+          ///////////////////////////////////////
+          // extract address values into an array
+          // get lon/lat values for each address
+          ///////////////////////////////////////
+          $('.addresses').submit(function(event){
+            
+            // clear results field
+            $('.searchresults').html("<h1> Search Results </h1>");
+            var coordinates = [];
+            var bounds = new google.maps.LatLngBounds();
+            var centerCoords;
+            var marker;
+
+            //////////////////////////////////////
+            // extract all addresses into an array
+            event.preventDefault();
+            $('.addressbox').each(function(address) {
+              var addressValue = $(this).val();
+              if (addressValue !== "") {
+                coordinates.push([addressValue,""]);
+                $(this).val("");
+              }
+            });
+
+            ////////////////////////////////////////////////////
+            // get lat/lon coordinates for each address in array
+            coordinates.forEach(function(coord, i){
+              geoCoder.geocode({
+                address: coord[0],
+              }, function(response){
+                coord[1] = response[0].geometry.location;
+                marker = new google.maps.Marker({
+                  position: new google.maps.LatLng(coord[1].lat(), coord[1].lng()),
+                  map: map
+                });
+
+                bounds.extend(marker.getPosition());
+                map.fitBounds(bounds);
+                if (i === coordinates.length-1) {
+                  centerCoords = map.getCenter();
+                  var image = 'pin.png';
+                  var center = new google.maps.Marker({
+                    position: centerCoords,
+                    map: map,
+                    title: "Meetup Area Center",
+                    icon: image,
+                    draggable: true
+                  });
+                  var kw = $('.keyword').val();
+                  console.log('Keyword value: ', kw, centerCoords.lat(), centerCoords.lng());
+
+                  /////////////////////////////////////////
+                  // query Yelp with keyword ad coordinates
+                  searchYelp(kw, centerCoords.lat(), centerCoords.lng(), function(data){
+                    console.log("Search results from Yelp: ", data);
+                    data.businesses.forEach(function(business){
+                      var entry = $('<div class="entry">' + 
+                                    '<img class="entryimage" src="' + business.image_url + '" />' + 
+                                    '<h3>' + business.name + '</h3>' +
+                                    '<img class="ratingimage" src="' + business.rating_img_url + '" />' + 
+                                    '<h4>' + business.display_phone + '</h4>' +
+                                    '</div>');
+                      entry.appendTo('.searchresults')
+                    });
+                  });
+                }
+              });
+            });
+            
+            console.log("Coordinates: ", coordinates);
+            return false;
+          });
+
+        }
+
+    </script>
+  </body>
