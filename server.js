@@ -7,8 +7,8 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');//require postgres
-
 var methodOverride = require('method-override');
+<<<<<<< c70f765029da39a0b95d4e9c8143ae1e97b23369
 var config = require('./config/config');
 var env = config.development;
 
@@ -30,12 +30,14 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var PassportLocalStrategy = require('passport-local').Strategy;
 
+//Apply modules to app
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(methodOverride('X-HTTP-Method-Override'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/public'));
+//app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(express.static(__dirname + '/public'));
 require('./app/routes.js')(app);//configure routes
+app.set('view engine','ejs');
 app.listen(port);
 
 console.log("App started on port:",port);
