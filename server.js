@@ -11,6 +11,10 @@ var env = config.development;
 //Database and ORM modules
 var pg = require('pg');
 var Sequelize = require('sequelize');
+
+// Yelp.js functions
+var searchYelp = require('./yelp');
+
 var conString = env.dialect+'://'+env.username+':'+env.password+'@'+env.host+':'+env.port+'/'+env.database;
 var sequelize = new Sequelize(conString, {
   dialect: 'postgres',
@@ -77,6 +81,20 @@ app.get('/', function(req,res){
 			console.log('fetched from database: ',result);
 			res.json(result);
 		})
+});
+
+// get request from yelp
+app.get('/places', function(req, res) {
+ 
+ /* TODO: might need to change the request's data object */
+ 
+ var term = req.headers.data.term;
+ var lat = req.headers.data.lat;
+ var lon = req.headers.data.lon;
+
+ searchYelp(term, lat, lon, function(data){
+   res.json(data);
+ });
 });
 
 console.log("App started on port:",port);
