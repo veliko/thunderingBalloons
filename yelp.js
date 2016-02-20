@@ -1,3 +1,6 @@
+//OAUTH modules for yelp api
+var Yelp = require('yelp');
+
 var auth = {
   consumerKey : "pVZYTtm4RMnrbJ-C07cM9Q",
   consumerSecret : "9CFLi9BwOCjb-3INZRMaZdfKjLI",
@@ -8,58 +11,39 @@ var auth = {
   }
 };
 
+var yelp = new Yelp({
+  consumer_key: auth.consumerKey,
+  consumer_secret: auth.consumerSecret,
+  token: auth.accessToken,
+  token_secret: auth.accessTokenSecret,
+});
+
 var searchYelp = function( keyword, latitude, longitude, callback ) {
 
-  var terms = keyword;
-  var lat = latitude;
-  var lon = longitude;
-
-  var accessor = {
-    consumerSecret : auth.consumerSecret,
-    tokenSecret : auth.accessTokenSecret
-  };
-
-  parameters = [];
-  parameters.push(['term', terms]);
-  parameters.push(['ll', lat+ ', ' + lon]);
-  parameters.push(['callback', 'cb']);
-  parameters.push(['oauth_consumer_key', auth.consumerKey]);
-  parameters.push(['oauth_consumer_secret', auth.consumerSecret]);
-  parameters.push(['oauth_token', auth.accessToken]);
-  parameters.push(['oauth_signature_method', 'HMAC-SHA1']);
-  
-  var message = {
-      'action' : 'http://api.yelp.com/v2/search',
-      'method' : 'GET',
-      'parameters' : parameters
-  };
-
-  OAuth.setTimestampAndNonce(message);
-  OAuth.SignatureMethod.sign(message, accessor);
-  
-  var parameterMap = OAuth.getParameterMap(message.parameters);
-  
-  $.ajax({
-    'url' : message.action,
-    'data' : parameterMap,
-    'dataType' : 'jsonp',
-    'jsonpCallback' : 'cb',
-    success : function(data, textStats, XMLHttpRequest) {
-        callback(data);
+  yelp.search({ term: keyword, ll: latitude+','+ longitude})
+  .then(function (data) {
+    //console.log(data);
+    if(callback){
+      callback(data);
     }
-  });
+  })
+  .catch(function (err) {
+    console.error('search Yelp Error: ', err);
+});
+ 
 }
 
-var getCenter = function( addresses ) {
-  // addresses is an array of objects in the following form [{lat: 123, lon: -123}, ... ,]
-  var sumLat = 0, sumLon = 0;
-  var numOfAddresses = addresses.length;
+// var getCenter = function( addresses ) {
+//   // addresses is an array of objects in the following form [{lat: 123, lon: -123}, ... ,]
+//   var sumLat = 0, sumLon = 0;
+//   var numOfAddresses = addresses.length;
 
-  $.each(addresses, function(index, address) {
-    sumLat += address['lat'];
-    sumLon += address['lon'];
-  });
+//   $.each(addresses, function(index, address) {
+//     sumLat += address['lat'];
+//     sumLon += address['lon'];
+//   });
 
-  return {lat: sumLat/numOfAddresses, lon: sumLon/numOfAddresses};
-}
+//   return {lat: sumLat/numOfAddresses, lon: sumLon/numOfAddresses};
+// }
 
+module.exports = searchYelp;
