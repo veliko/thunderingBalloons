@@ -21,15 +21,25 @@ module.exports = function(app){
     //flash message to be implemented
     res.render('../views/login.ejs', {message:"Enter username and password"});
 
-    //fetch hashedpassword and salt for entered username
-
-    //add the salt to the provided password and compare with the result.
-
   });
 
   app.post('/login', function(req,res){
-    console.log(req.body.username);
-    console.log(req.body.password);
+    var username = req.body.username;
+    var password = req.body.password;
+    //fetch hashedpassword and salt for entered username
+    sequelize.sync().then(function(){
+      User.findOne({
+        where:{'uid':username}
+      }).then(function(result){
+        bcrypt.compare(password, result.dataValues.password, function(err, res) {
+          if(res){
+            console.log("matched!");
+          }else{
+            console.log("try again");
+          }
+        });
+      })
+    });
   });
 
   app.get('/signup', function(req,res){
@@ -38,10 +48,6 @@ module.exports = function(app){
   });
 
   app.post('/signup', function(req,res){
-    //res.render('../views/signup.ejs', {message:"Inside signup page"});
-    console.log('inside POST!');
-    console.log("username ",req.body.username);
-    console.log("password ",req.body.password);
 
     bcrypt.genSalt(10, function(err, salt){
       bcrypt.hash(req.body.password, salt, function(err, hash){
