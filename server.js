@@ -26,18 +26,3 @@ app.listen(port);
 
 console.log("App started on port:",port);
 exports = module.exports = app;
-
-
-
-//var user = User.create({ username: "admin", password: "bolognese" });
-
-//initialize connection to Postgres DB
-//var sequelize = new Sequelize('postgres://user:password@localhost:5432/dbname');
-//var client = new pg.Client(conString);
-
-//attach auth modules to application
-// app.use(cookieParser());
-// app.use(session({secret:'thunderingBalloons'}));
-// app.use(passport.initialize());
-// app.use(passport.session());
-//app.use(flash());
