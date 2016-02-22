@@ -5,10 +5,11 @@ var sequelize = new Sequelize(env.dialect+'://'+env.username+':'+env.password+'@
 
 "use strict";
 
-	var User = sequelize.define('User',
+	var User = sequelize.define('user',
 	{
-	  username: Sequelize.STRING,
-	  password: Sequelize.STRING
+	  uid: Sequelize.STRING,
+	  password: Sequelize.STRING,
+		salt: Sequelize.STRING
 	});
 
 	module.exports = User;
