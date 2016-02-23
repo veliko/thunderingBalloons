@@ -49,20 +49,26 @@ module.exports = function(app){
       var username = req.body.username;
       var password = req.body.password;
       //fetch hashedpassword and salt for entered username
-      sequelize.sync().then(function(){
+      sequelize.sync().then(function() {
         User.findOne({
-          where:{'uid':username}
-        }).then(function(result){
-          if (!result) {
-            response.send(400, "<p>Invalid User</p>");
+          where:{'username':username}
+        })
+        .then(function(matchedUser){
+          if (!matchedUser) {
+          response.send(400, "Invalid User");
           }
-          bcrypt.compare(password, result.dataValues.password, function(err, res) {
-            if(res){
+          bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
+            if (match) {
+              // return an an array with users and location
               console.log("matched!");
-              response.send(200, "<p>Hello, Veliko</p>");
-            }else{
+              User.findAll({
+                attributes: ["username", "latitude", "longitude"]
+              }).then(function(allUsers){
+                response.send(200, allUsers);
+              });
+            } else {
               console.log("try again");
-              response.send(400, "<p>Invalid User</p>")
+              response.send(400, "pass does not match")
             }
           });
         })
@@ -73,23 +79,41 @@ module.exports = function(app){
   ///////////////////////////
   // signup route handling //
   ///////////////////////////
+
+  // extra route to see if chosen user name exists
+  app.route('/signup/users/:username')
+    .get(function(req, res){
+      sequelize.sync().then(function() {
+        User.findOne({
+          where:{'username': req.params.username}
+        }).then(function(result){
+          res.send(200, result ? true : false);
+        });
+      });
+    });
+
+  // main signup route logic  
   app.route('/signup')
     .get(function(req,res){
       res.render('../views/signup.ejs', {message:"Inside signup page"});
     })
     .post(function(req,res){
       bcrypt.genSalt(10, function(err, salt){
+        console.log("salt: ", salt, "\nuser: ", req.body.username);
+        console.log("request looks like this: ", req.body);
         bcrypt.hash(req.body.password, salt, function(err, hash){
           sequelize.sync().then(function(){
             return User.create({
-              uid:req.body.username,
-              password:hash,
-              salt:salt,
-              createdAt:Date.now()
+              username: req.body.username,
+              hash: hash,
+              email: req.body.email,
+              latitude: req.body.latitude,
+              longitude: req.body.longitude,
+              createdAt: Date.now()
             });
           }).then(function(result){
             console.log('posted to database.');
-            res.json("Created new user...");
+            res.send(200, "Created new user...");
           })
         })
       });

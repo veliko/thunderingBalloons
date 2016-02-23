@@ -7,9 +7,11 @@ var sequelize = new Sequelize(env.dialect+'://'+env.username+':'+env.password+'@
 
 	var User = sequelize.define('user',
 	{
-	  uid: Sequelize.STRING,
-	  password: Sequelize.STRING,
-		salt: Sequelize.STRING
+	  username: Sequelize.STRING,
+    hash: Sequelize.STRING,
+    email: Sequelize.STRING,
+    latitude: Sequelize.STRING,
+    longitude: Sequelize.STRING,
 	});
 
 	module.exports = User;
