@@ -1,4 +1,4 @@
-var User = require('./models/user');
+var User = require('../models/user');
 var config = require('../config/config');
 var env = config.development;
 var flash = require('connect-flash');
