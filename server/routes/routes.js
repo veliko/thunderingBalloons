@@ -1,5 +1,5 @@
-var User = require('../models/user');
-var config = require('../config/config');
+var User = require('../db/models/user');
+var config = require('../db/config/config');
 var env = config.development;
 var flash = require('connect-flash');
 var bcrypt = require('bcrypt');
