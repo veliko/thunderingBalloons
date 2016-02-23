@@ -57,3 +57,4 @@ app.get('/places', function(req, res) {
 });
 
 console.log("App started on port:",port);
+exports = module.exports = app;
