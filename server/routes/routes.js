@@ -49,7 +49,7 @@ module.exports = function(app){
       var username = req.body.username;
       var password = req.body.password;
       //fetch hashedpassword and salt for entered username
-      sequelize.sync().then(function(){
+      sequelize.sync().then(function() {
         User.findOne({
           where:{'uid':username}
         }).then(function(result){
@@ -79,17 +79,21 @@ module.exports = function(app){
     })
     .post(function(req,res){
       bcrypt.genSalt(10, function(err, salt){
+        console.log("salt: ", salt, "\nuser: ", req.body.username);
+        console.log("request looks like this: ", req.body);
         bcrypt.hash(req.body.password, salt, function(err, hash){
           sequelize.sync().then(function(){
             return User.create({
-              uid:req.body.username,
-              password:hash,
-              salt:salt,
-              createdAt:Date.now()
+              username: req.body.username,
+              hash: hash,
+              email: req.body.email,
+              latitude: req.body.latitude,
+              longitude: req.body.longitude,
+              createdAt: Date.now()
             });
           }).then(function(result){
             console.log('posted to database.');
-            res.json("Created new user...");
+            res.send(200, "Created new user...");
           })
         })
       });
