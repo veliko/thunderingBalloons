@@ -2,7 +2,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      placesList: []
+      placesList: [],
+      addressesList: []
     };
   }
 
@@ -17,19 +18,20 @@ class App extends React.Component {
   //}
 
   setStates(data) {
-    console.log('placesList:', data.placesList);
-    this.setState({placesList : data.placesList});
+    if(data.placesList) {
+      this.setState({placesList : data.placesList});
+    }
+    if(data.addressesList) {
+      this.setState({addressesList : data.addressesList});
+    }
   }
 
   render() {
     return (
       <div>
-        <section>
-          <Search setStates = {this.setStates.bind(this)}/>
-        </section>
-        <section>
-          <PlaceList places = {this.state.placesList} />
-        </section>
+        <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
+        <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} />
+        <PlaceList places = {this.state.placesList} />
       </div>
     )
   }
