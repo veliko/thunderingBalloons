@@ -17,8 +17,8 @@ class App extends React.Component {
   //}
 
   setStates(data) {
-    //this.setState({currentlyPlaying : data.items[0]});
-    //this.setState({videoList : data.items});
+    console.log('placesList:', data.placesList);
+    this.setState({placesList : data.placesList});
   }
 
   // autoplay(){
@@ -29,7 +29,7 @@ class App extends React.Component {
     return (
       <div>
         <section>
-          <Search />
+          <Search setStates = {this.setStates.bind(this)}/>
         </section>
         <section>
         </section>
