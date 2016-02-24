@@ -27,10 +27,10 @@ module.exports = function(app){
   /////////////////////////
   app.route('/')
     .get(function(req,res){
-      if ( !utils.isLoggedIn ) { 
+      if ( !utils.isLoggedIn(req) ) { 
         res.send(400, "Invalid credentials, please log in") 
       } else {
-        res.send(200, "User successfully logged in!");
+        res.send(200, "User successfully logged in to root!");
       }
     });
     // .post(function(req,res){
@@ -53,7 +53,7 @@ module.exports = function(app){
     .get(function(req,res){
       res.render('../views/login.ejs', {message:"Enter username and password"});
     })
-    .post(function(req,response){
+    .post(function(req,res){
       var username = req.body.username;
       var password = req.body.password;
       //fetch hashedpassword and salt for entered username
@@ -63,7 +63,7 @@ module.exports = function(app){
         })
         .then(function(matchedUser){
           if (!matchedUser) { response.send(400, "Invalid User"); }
-          
+
           bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
             if (match) {
               // return an an array with users and location
@@ -72,11 +72,11 @@ module.exports = function(app){
                 attributes: ["username", "latitude", "longitude"]
               }).then(function(allUsers){
                 utils.createSession(req, res, username);
-                response.send(200, allUsers);
+                // res.send(200, allUsers);
               });
             } else {
               console.log("try again");
-              response.send(400, "pass does not match")
+              res.send(400, "pass does not match")
             }
           });
         })
@@ -139,5 +139,13 @@ module.exports = function(app){
       res.json(data);
     });
   });
+
+  app.route('/logout')
+    .get(function(req, res) {
+      req.session.destroy(function(){
+        console.log("LOGGED OUT!!!");
+        res.redirect('/');
+      });
+    });
 
 };
