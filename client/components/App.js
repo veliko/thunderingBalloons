@@ -28,6 +28,7 @@ class App extends React.Component {
           <Search setStates = {this.setStates.bind(this)}/>
         </section>
         <section>
+          <PlaceList places = {this.state.placesList} />
         </section>
       </div>
     )
