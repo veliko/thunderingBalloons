@@ -11,6 +11,9 @@ var sequelize = new Sequelize(conString, {
   dialect: 'postgres',
 });
 
+// Yelp.js functions
+var searchYelp = require('./utils/yelp');
+
 
 /////////////////////////////////////////////////////
 // configure endpoints //////////////////////////////
