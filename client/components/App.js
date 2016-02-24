@@ -2,7 +2,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      placesList: []
+      placesList: [],
+      addressesList: []
     };
   }
 
@@ -23,12 +24,8 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <section>
-          <Search setStates = {this.setStates.bind(this)}/>
-        </section>
-        <section>
-          <PlaceList places = {this.state.placesList} />
-        </section>
+        <Search setStates = {this.setStates.bind(this)}/>
+        <PlaceList places = {this.state.placesList} />
       </div>
     )
   }
