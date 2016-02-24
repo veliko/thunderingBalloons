@@ -15,7 +15,7 @@ var port = process.env.PORT || 8080;
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-// var session = require('express-session');
+var session = require('express-session');
 var methodOverride = require('method-override');
 var config = require('./db/config/config');
 var env = config.development;
@@ -36,7 +36,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-// app.use(session);
+app.use(session({secret: "TestSecret"}));
 
 // app.post('/signup', function(req, res){
 //   console.log("got new request: ", req.body);

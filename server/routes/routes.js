@@ -3,6 +3,7 @@ var config = require('../db/config/config');
 var env = config.development;
 var flash = require('connect-flash');
 var bcrypt = require('bcrypt');
+var utils = require('../utils/utils');
 
 // db modules
 var Sequelize = require('sequelize');
@@ -26,19 +27,23 @@ module.exports = function(app){
   /////////////////////////
   app.route('/')
     .get(function(req,res){
-      res.render('../views/index.ejs');
-    })
-    .post(function(req,res){
-      var id = req.body.id;
-      sequelize.sync().then(function(){
-        return User.findAll({
-          where:{'id':id}
-        });
-      }).then(function(result){
-        console.log('fetched from database: ',result);
-        res.json(result);
-      });
+      if ( !utils.isLoggedIn ) { 
+        res.send(400, "Invalid credentials, please log in") 
+      } else {
+        res.send(200, "User successfully logged in!");
+      }
     });
+    // .post(function(req,res){
+    //   var id = req.body.id;
+    //   sequelize.sync().then(function(){
+    //     return User.findAll({
+    //       where:{'id':id}
+    //     });
+    //   }).then(function(result){
+    //     console.log('fetched from database: ',result);
+    //     res.json(result);
+    //   });
+    // });
 
 
   //////////////////////////
@@ -57,9 +62,8 @@ module.exports = function(app){
           where:{'username':username}
         })
         .then(function(matchedUser){
-          if (!matchedUser) {
-          response.send(400, "Invalid User");
-          }
+          if (!matchedUser) { response.send(400, "Invalid User"); }
+          
           bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
             if (match) {
               // return an an array with users and location
@@ -67,6 +71,7 @@ module.exports = function(app){
               User.findAll({
                 attributes: ["username", "latitude", "longitude"]
               }).then(function(allUsers){
+                utils.createSession(req, res, username);
                 response.send(200, allUsers);
               });
             } else {

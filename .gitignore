@@ -34,3 +34,6 @@ node_modules
 
 # DS_store
 .DS_Store
+
+# Bower_Components
+bower_components
