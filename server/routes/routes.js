@@ -1,4 +1,6 @@
 var User = require('../db/models/user');
+var Event = require('../db/models/event');
+var Invitee = require('../db/models/invitee');
 var config = require('../db/config/config');
 var env = config.development;
 var flash = require('connect-flash');
@@ -27,11 +29,16 @@ module.exports = function(app){
   /////////////////////////
   app.route('/')
     .get(function(req,res){
-      var message = "User " + req.session.user + " successfully logged in to root!"
+      // var message = "User " + req.session.user + " successfully logged in to root!"
       if ( !utils.isLoggedIn(req) ) { 
         res.send(400, "Invalid credentials, please log in") 
+
       } else {
-        res.send(200, message);
+        User.findAll({
+          attributes: ["id", "username", "latitude", "longitude"]
+        }).then(function(allUsers){
+          res.send(200, allUsers);
+        });
       }
     });
 
@@ -46,26 +53,17 @@ module.exports = function(app){
     .post(function(req,res){
       var username = req.body.username;
       var password = req.body.password;
-      //fetch hashedpassword and salt for entered username
+
       sequelize.sync().then(function() {
         User.findOne({
           where:{'username':username}
         })
         .then(function(matchedUser){
           if (!matchedUser) { res.redirect('/'); }
-
           bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
             if (match) {
-              // return an an array with users and location
-              console.log("matched!");
-              User.findAll({
-                attributes: ["username", "latitude", "longitude"]
-              }).then(function(allUsers){
-                utils.createSession(req, res, username);
-                // res.send(200, allUsers);
-              });
+              utils.createSession(req, res, username);
             } else {
-              console.log("try again");
               res.send(400, "pass does not match")
             }
           });
@@ -79,6 +77,7 @@ module.exports = function(app){
   ///////////////////////////
 
   // extra route to see if chosen user name exists
+  // useful when creating a new profile
   app.route('/signup/users/:username')
     .get(function(req, res){
       sequelize.sync().then(function() {
@@ -117,6 +116,7 @@ module.exports = function(app){
       });
     });
 
+
   ///////////////////////////
   // get request from yelp //
   ///////////////////////////
@@ -132,6 +132,10 @@ module.exports = function(app){
     });
   });
 
+
+  //////////////////
+  // logout route //
+  //////////////////
   app.route('/logout')
     .get(function(req, res) {
       req.session.destroy(function(){
@@ -140,4 +144,44 @@ module.exports = function(app){
       });
     });
 
+
+  ///////////////////////////
+  // event routes handling //
+  ///////////////////////////
+
+  app.route('/events')
+   .post(function(req, res) {
+     // write all event info into events table
+    sequelize.sync().then(function(){
+      Event.create({
+        event_name: req.body.event_info.event_name,
+        org_id: req.body.event_info.org_id,
+        venue_name: req.body.event_info.venue_name,
+        street: req.body.event_info.street,
+        city: req.body.event_info.city,
+        state: req.body.event_info.state,
+        event_time: req.body.event_info.event_time,
+        latitude: req.body.event_info.latitude,
+        longitude: req.body.event_info.longitude,
+        phone: req.body.event_info.phone,
+        rating: req.body.event_info.rating,
+        rating_img: req.body.event_info.rating_img,
+        image: req.body.event_info.image,
+        yelp_link: req.body.event_info.yelp_link,
+        createdAt: Date.now()
+      });
+      res.send(200, "wrote to db");
+      // .then();
+       // create a new event
+       // populate fields
+     // write all invitee info into invitees table
+      // response
+     // res.send(200, req.body);
+    });
+  });
+
 };
+
+
+
+
