@@ -16,6 +16,13 @@ class App extends React.Component {
   //  }
 
   //}
+  removeAddress (address, event){
+    event.preventDefault();
+    var addressesList = this.state.addressesList.filter(function(adrs){
+      return address!== adrs;
+    });
+    this.setStates({addressesList: addressesList});
+  }
 
   setStates(data) {
     if(data.placesList) {
@@ -30,7 +37,7 @@ class App extends React.Component {
     return (
       <div>
         <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
-        <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} />
+        <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} onRemove = {this.removeAddress.bind(this)}/>
         <PlaceList places = {this.state.placesList} />
       </div>
     )

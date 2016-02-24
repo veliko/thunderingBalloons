@@ -12,5 +12,3 @@ var searchPlaces = function (options, callback) {
     });
   });
 };
-
-window.searchPlaces = searchPlaces;
