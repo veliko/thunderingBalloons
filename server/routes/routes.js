@@ -119,19 +119,17 @@ module.exports = function(app){
       });
     });
 
-
   ///////////////////////////
   // get request from yelp //
   ///////////////////////////
-  app.route('/places')
-    .get(function(req, res) {
-     /* TODO: might need to change the request's data object */
-     var term = req.headers.data.term;
-     var lat = req.headers.data.lat;
-     var lon = req.headers.data.lon;
-     searchYelp(term, lat, lon, function(data){
-       res.json(data);
-     });
+  app.get('/places', function(req, res) {
+    var term = req.query.term;
+    var lat = req.query.lat;
+    var lon = req.query.lng;
+
+    searchYelp(term, lat, lon, function(data){
+      res.json(data);
     });
+  });
 
 };
