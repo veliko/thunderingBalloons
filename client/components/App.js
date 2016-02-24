@@ -21,10 +21,6 @@ class App extends React.Component {
     this.setState({placesList : data.placesList});
   }
 
-  // autoplay(){
-  //   this.setState({autoplay: !this.state.autoplay});
-  // }
-
   render() {
     return (
       <div>
