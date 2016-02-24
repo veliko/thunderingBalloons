@@ -11,7 +11,7 @@ exports.createSession = function(req, res, newUser) {
 };
 
 exports.checkUser = function(req, res, next) {
-  if (!isLoggedIn(req)){
+  if (!exports.isLoggedIn(req)){
     res.redirect('/');
   } else {
     next();

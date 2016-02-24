@@ -27,23 +27,13 @@ module.exports = function(app){
   /////////////////////////
   app.route('/')
     .get(function(req,res){
+      var message = "User " + req.session.user + " successfully logged in to root!"
       if ( !utils.isLoggedIn(req) ) { 
         res.send(400, "Invalid credentials, please log in") 
       } else {
-        res.send(200, "User successfully logged in to root!");
+        res.send(200, message);
       }
     });
-    // .post(function(req,res){
-    //   var id = req.body.id;
-    //   sequelize.sync().then(function(){
-    //     return User.findAll({
-    //       where:{'id':id}
-    //     });
-    //   }).then(function(result){
-    //     console.log('fetched from database: ',result);
-    //     res.json(result);
-    //   });
-    // });
 
 
   //////////////////////////
@@ -62,7 +52,7 @@ module.exports = function(app){
           where:{'username':username}
         })
         .then(function(matchedUser){
-          if (!matchedUser) { response.send(400, "Invalid User"); }
+          if (!matchedUser) { res.redirect('/'); }
 
           bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
             if (match) {
@@ -130,7 +120,9 @@ module.exports = function(app){
   ///////////////////////////
   // get request from yelp //
   ///////////////////////////
-  app.get('/places', function(req, res) {
+  app.route('/places')
+    .get(utils.checkUser, function(req, res) {
+    
     var term = req.query.term;
     var lat = req.query.lat;
     var lon = req.query.lng;
