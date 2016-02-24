@@ -18,13 +18,19 @@ class App extends React.Component {
   //}
 
   setStates(data) {
-    this.setState({placesList : data.placesList});
+    if(data.placesList) {
+      this.setState({placesList : data.placesList});
+    }
+    if(data.addressesList) {
+      this.setState({addressesList : data.addressesList});
+    }
   }
 
   render() {
     return (
       <div>
-        <Search setStates = {this.setStates.bind(this)}/>
+        <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
+        <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} />
         <PlaceList places = {this.state.placesList} />
       </div>
     )

@@ -1,8 +1,8 @@
 var AddressListEntry = ({address}) => (
   
   <div>
-    <div>{address.name}</div>
-    <a href='#'> remove </a>
+    <div>{address} <a href='#'> remove </a> </div>
+    
       
   </div>
 );

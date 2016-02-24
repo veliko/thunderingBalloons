@@ -1,8 +1,8 @@
-var AddressList = ({addresses}) => (
+var AddressList = ({addresses, setState}) => (
 
   <div>
-  {addresses.map((addresses) => 
-    <AddressListEntry addresses={addresses} key={addresses.id} />
+  {addresses.map((address) => 
+    <AddressListEntry address={address} key={address.id} />
     )}
   </div>
 );
