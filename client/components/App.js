@@ -17,7 +17,6 @@ class App extends React.Component {
   //}
 
   setStates(data) {
-    console.log('placesList:', data.placesList);
     this.setState({placesList : data.placesList});
   }
 
