@@ -4,11 +4,6 @@ class Search extends React.Component {
     super(props);
   }
 
-  searchMethod(){
-    searchYouTube(null, this.props.setStates);
-  }
- 
- //  <button className="btn hidden-sm-down" onClick = {() => searchYouTube(null, this.props.setStates)}>
   render() {
     return (
       <div>
@@ -18,9 +13,9 @@ class Search extends React.Component {
         <input type='submit' value='Add'/>
         <br/><br/>
         <input type='submit' value='Search' onClick = {() => searchPlaces(null, this.props.setStates)}/>
+        <br/><br/>
       </div> 
   )}
 };
-
 
 window.Search = Search;
