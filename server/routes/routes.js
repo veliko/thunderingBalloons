@@ -3,6 +3,7 @@ var config = require('../db/config/config');
 var env = config.development;
 var flash = require('connect-flash');
 var bcrypt = require('bcrypt');
+var utils = require('../utils/utils');
 
 // db modules
 var Sequelize = require('sequelize');
@@ -26,19 +27,23 @@ module.exports = function(app){
   /////////////////////////
   app.route('/')
     .get(function(req,res){
-      res.render('../views/index.ejs');
-    })
-    .post(function(req,res){
-      var id = req.body.id;
-      sequelize.sync().then(function(){
-        return User.findAll({
-          where:{'id':id}
-        });
-      }).then(function(result){
-        console.log('fetched from database: ',result);
-        res.json(result);
-      });
+      if ( !utils.isLoggedIn(req) ) { 
+        res.send(400, "Invalid credentials, please log in") 
+      } else {
+        res.send(200, "User successfully logged in to root!");
+      }
     });
+    // .post(function(req,res){
+    //   var id = req.body.id;
+    //   sequelize.sync().then(function(){
+    //     return User.findAll({
+    //       where:{'id':id}
+    //     });
+    //   }).then(function(result){
+    //     console.log('fetched from database: ',result);
+    //     res.json(result);
+    //   });
+    // });
 
 
   //////////////////////////
@@ -48,7 +53,7 @@ module.exports = function(app){
     .get(function(req,res){
       res.render('../views/login.ejs', {message:"Enter username and password"});
     })
-    .post(function(req,response){
+    .post(function(req,res){
       var username = req.body.username;
       var password = req.body.password;
       //fetch hashedpassword and salt for entered username
@@ -57,9 +62,8 @@ module.exports = function(app){
           where:{'username':username}
         })
         .then(function(matchedUser){
-          if (!matchedUser) {
-          response.send(400, "Invalid User");
-          }
+          if (!matchedUser) { response.send(400, "Invalid User"); }
+
           bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
             if (match) {
               // return an an array with users and location
@@ -67,11 +71,12 @@ module.exports = function(app){
               User.findAll({
                 attributes: ["username", "latitude", "longitude"]
               }).then(function(allUsers){
-                response.send(200, allUsers);
+                utils.createSession(req, res, username);
+                // res.send(200, allUsers);
               });
             } else {
               console.log("try again");
-              response.send(400, "pass does not match")
+              res.send(400, "pass does not match")
             }
           });
         })
@@ -134,5 +139,13 @@ module.exports = function(app){
       res.json(data);
     });
   });
+
+  app.route('/logout')
+    .get(function(req, res) {
+      req.session.destroy(function(){
+        console.log("LOGGED OUT!!!");
+        res.redirect('/');
+      });
+    });
 
 };
