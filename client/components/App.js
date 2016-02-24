@@ -17,15 +17,10 @@ class App extends React.Component {
 
   //}
   removeAddress (address, event){
-    console.log('removing event:', event);
     event.preventDefault();
-    console.log('removing address:', address);
-    console.log('before removing:', this.state.addressesList);
     var addressesList = this.state.addressesList.filter(function(adrs){
-
       return address!== adrs;
     });
-    console.log('after removing:', addressesList);
     this.setStates({addressesList: addressesList});
   }
 
