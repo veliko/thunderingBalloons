@@ -9,7 +9,10 @@ var sequelize = new Sequelize(env.dialect+'://'+env.username+':'+env.password+'@
   {
     uid : Sequelize.INTEGER,
     eid : Sequelize.INTEGER,
-    current_status : Sequelize.ENUM('pending', 'accepted', 'rejected')
+    current_status : {
+      type: Sequelize.ENUM,
+      values: ['pending', 'accepted', 'rejected']
+    }
   });
 
   module.exports = Invitee;

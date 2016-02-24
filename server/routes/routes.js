@@ -153,7 +153,7 @@ module.exports = function(app){
    .post(function(req, res) {
      // write all event info into events table
     sequelize.sync().then(function(){
-      Event.create({
+      return Event.create({
         event_name: req.body.event_info.event_name,
         org_id: req.body.event_info.org_id,
         venue_name: req.body.event_info.venue_name,
@@ -169,8 +169,25 @@ module.exports = function(app){
         image: req.body.event_info.image,
         yelp_link: req.body.event_info.yelp_link,
         createdAt: Date.now()
+      }).then(function(result) {
+        if (result){
+          req.body.invitees.forEach(function(invitee, index){
+            Invitee.create({
+              uid: invitee,
+              eid: result.id,
+              current_status: invitee === result.org_id ? "accepted" : "pending",
+              createdAt: Date.now()
+            })
+            .then(function() {
+              if (index === req.body.invitees.length-1) {
+                res.send(200, "wrote all invitees to db");
+              }
+            });
+          });
+        } else {
+          res.send(500, "unable to write to db");
+        }
       });
-      res.send(200, "wrote to db");
       // .then();
        // create a new event
        // populate fields
