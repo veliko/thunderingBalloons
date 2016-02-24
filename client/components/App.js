@@ -16,6 +16,18 @@ class App extends React.Component {
   //  }
 
   //}
+  removeAddress (address, event){
+    console.log('removing event:', event);
+    event.preventDefault();
+    console.log('removing address:', address);
+    console.log('before removing:', this.state.addressesList);
+    var addressesList = this.state.addressesList.filter(function(adrs){
+
+      return address!== adrs;
+    });
+    console.log('after removing:', addressesList);
+    this.setStates({addressesList: addressesList});
+  }
 
   setStates(data) {
     if(data.placesList) {
@@ -30,7 +42,7 @@ class App extends React.Component {
     return (
       <div>
         <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
-        <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} />
+        <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} onRemove = {this.removeAddress.bind(this)}/>
         <PlaceList places = {this.state.placesList} />
       </div>
     )
