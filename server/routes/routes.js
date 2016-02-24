@@ -12,7 +12,7 @@ var sequelize = new Sequelize(conString, {
 });
 
 // Yelp.js functions
-var searchYelp = require('./utils/yelp');
+var searchYelp = require('../utils/yelp');
 
 
 /////////////////////////////////////////////////////
