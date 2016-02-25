@@ -34,19 +34,21 @@ class App extends React.Component {
   }
 
   render() {
-    // if (nosesion) {
-    //   return {
-    //     login component
-    //   }
-    // } else 
-
-    return (
-      <div>
-        <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
-        <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} onRemove = {this.removeAddress.bind(this)}/>
-        <PlaceList places = {this.state.placesList} />
-      </div>
-    )
+    if (!window.localStorage.session) {
+      return (
+        <div>
+          <SignUp />
+        </div>
+        )
+    } else {
+      return (
+        <div>
+          <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
+          <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} onRemove = {this.removeAddress.bind(this)}/>
+          <PlaceList places = {this.state.placesList} />
+        </div>
+      )
+    }
   }
 }
 
