@@ -25,6 +25,12 @@ class App extends React.Component {
     this.setStates({addressesList: addressesList});
   }
 
+  setCurrentPage (currentPage, event) {
+  console.log('curent:', currentPage, 'event', event);
+  event.preventDefault();
+  this.setStates({currentPage: currentPage});
+}
+
   setStates(data) {
     if(data.placesList) {
       this.setState({placesList : data.placesList});
@@ -39,11 +45,20 @@ class App extends React.Component {
 
   render() {
     if (!window.localStorage.session) {
-      return (
+      if(this.state.currentPage === '/signup'){
+        return (
         <div>
-          <Login setStates = {this.setStates.bind(this)}/>
+          <SignUp onRedirect = {this.setCurrentPage.bind(this)}/>
         </div>
         )
+      }else{
+        return (
+        <div>
+          <Login onRedirect = {this.setCurrentPage.bind(this)}/>
+        </div>
+        )
+      }
+      
     } else {
       return (
         <div>

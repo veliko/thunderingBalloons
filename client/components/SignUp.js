@@ -1,4 +1,4 @@
-var SignUp = () => (
+var SignUp = (props) => (
 <div>
       <div>
         <label>Username</label>
@@ -12,9 +12,8 @@ var SignUp = () => (
         <label>Address</label>
         <input id='signup-address' type="text" name="address" required />
       </div>
-      <button type="submit" value = "Submit" onClick = {() => signup()} >Submit</button>
-  <p>Already have an account? <a href="/login">Login</a></p>
-  <p>Or go <a href="/">home</a>.</p>
+      <button type="submit" value = "Submit" onClick = {() => signup(props.setStates)} >Submit</button>
+  <p>Already have an account? <a href onClick={props.onRedirect.bind(this, '/login')}>Login</a></p>
 </div>
 );
 
