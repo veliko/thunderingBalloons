@@ -3,7 +3,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       placesList: [],
-      addressesList: []
+      addressesList: [],
+      currentPage: '/login'
     };
   }
 
@@ -31,13 +32,16 @@ class App extends React.Component {
     if(data.addressesList) {
       this.setState({addressesList : data.addressesList});
     }
+    if(data.currentPage) {
+      this.setState({currentPage : data.currentPage});
+    }
   }
 
   render() {
     if (!window.localStorage.session) {
       return (
         <div>
-          <Login />
+          <Login setStates = {this.setStates.bind(this)}/>
         </div>
         )
     } else {

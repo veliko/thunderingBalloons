@@ -7,7 +7,7 @@ exports.createSession = function(req, res, newUser, uid) {
   return req.session.regenerate(function () {
     req.session.user = newUser;
     req.session.uid = uid;
-    res.redirect('/');
+    //res.redirect(200, '/');
   });
 };
 

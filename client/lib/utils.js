@@ -15,7 +15,7 @@ var signup = function () {
   });
 }
 
-var login = function () {
+var login = function (callback) {
   var username = $('#login-username').val();
   var password = $('#login-password').val();
 
@@ -24,6 +24,7 @@ var login = function () {
     .done(function (data){
       console.log('successful signup', data);
       window.localStorage.setItem('session', data);
+      callback({currentPage: '/'});
   }).fail(function (error){
     console.error('Failed to login user!', error);
   });

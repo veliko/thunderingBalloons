@@ -48,7 +48,7 @@ module.exports = function(app){
   //////////////////////////
   app.route('/login')
     .get(function(req,res){
-      res.render('../views/login.ejs', {message:"Enter username and password"});
+      //res.render('../views/login.ejs', {message:"Enter username and password"});
     })
     .post(function(req,res){
       var username = req.body.username;
@@ -68,7 +68,7 @@ module.exports = function(app){
               if (match) {
                 utils.createSession(req, res, username, matchedUser.dataValues.id);
                 console.log('requestID', req.sessionID);
-                res.send(200, req.sessionID);
+                res.send(200, req.sessionID)
               } else {
                 res.send(400, "pass does not match")
               }
