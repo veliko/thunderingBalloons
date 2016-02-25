@@ -36,10 +36,15 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(session({secret: "TestSecret"}));
+app.use(session({
+	secret: "TestSecret", 
+  resave: false,
+  saveUninitialized: true
+}));
 
 require('./routes/routes.js')(app);
 
+app.set('views', __dirname + '/views');
 app.set('view engine','ejs');
 app.listen(port);
 
