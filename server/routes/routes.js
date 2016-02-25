@@ -65,6 +65,7 @@ module.exports = function(app){
             bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
               if (match) {
                 utils.createSession(req, res, username, matchedUser.dataValues.id);
+                res.send(200, req.sessionID);
               } else {
                 res.send(400, "pass does not match")
               }
