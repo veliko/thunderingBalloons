@@ -6,6 +6,7 @@ var searchPlaces = function (options, callback) {
     var query = {lat:lat, lng:lng, term:term};
     $.get('http://localhost:8080/places', query)
       .done(function (data){
+        console.log('successfully YELP get', data);
         callback({placesList: data.businesses});
     }).fail(function (error){
       console.error('Yelp: Failed to receive places!', error);

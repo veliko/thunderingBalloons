@@ -1,18 +1,9 @@
 class Nav extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currentPage: '/login'
-    };
-  }
-
-  setStates(data) {
-  }
 
   render() {
       return (
         <div>
-          <div>My Events</div>
+          <div onClick={() => getEvents()}> My Events</div>
           <div>Add Events</div>
           <div>Log Out </div>
         </div>
