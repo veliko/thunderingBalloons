@@ -34,7 +34,7 @@ var login = function (callback) {
 var getEvents = function () {
   var query = {session: {uid: 1}};
   console.log('inside get events client side');
-  $.get('/events', query)
+  $.get('http://localhost:8080/events', query)
       .done(function (data){
        console.log('successful events', data);
     }).fail(function (error){
