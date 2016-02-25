@@ -98,24 +98,36 @@ module.exports = function(app){
       res.render('../views/signup.ejs', {message:"Inside signup page"});
     })
     .post(function(req,res){
-      bcrypt.genSalt(10, function(err, salt){
-        console.log("salt: ", salt, "\nuser: ", req.body.username);
-        console.log("request looks like this: ", req.body);
-        bcrypt.hash(req.body.password, salt, function(err, hash){
-          sequelize.sync().then(function(){
-            return User.create({
-              username: req.body.username,
-              hash: hash,
-              email: req.body.email,
-              latitude: req.body.latitude,
-              longitude: req.body.longitude,
-              createdAt: Date.now()
-            });
-          }).then(function(result){
-            console.log('posted to database.');
-            res.send(200, "Created new user...");
-          })
+      var username = req.body.username;
+
+      // If username exists, throw error
+      sequelize.sync().then(function() {
+        User.findOne({
+          where:{'username':username}
         })
+        .then(function(matchedUser){
+          if (matchedUser) { 
+          res.send(500, "Username " + username + " is already taken."); 
+          } else {
+            bcrypt.genSalt(10, function(err, salt){
+              bcrypt.hash(req.body.password, salt, function(err, hash){
+                sequelize.sync().then(function(){
+                  return User.create({
+                    username: req.body.username,
+                    hash: hash,
+                    email: req.body.email,
+                    latitude: req.body.latitude,
+                    longitude: req.body.longitude,
+                    createdAt: Date.now()
+                  });
+                }).then(function(result){
+                  console.log('posted user to database');
+                  res.send(200, "Created new user...");
+                })
+              })
+            });
+          }
+        });
       });
     });
 
