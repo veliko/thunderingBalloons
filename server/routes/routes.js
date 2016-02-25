@@ -122,7 +122,7 @@ module.exports = function(app){
                   });
                 }).then(function(result){
                   console.log('posted user to database');
-                  res.send(200, "Created new user...");
+                  res.redirect(200, "/login");
                 })
               })
             });
