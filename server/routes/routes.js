@@ -34,7 +34,7 @@ module.exports = function(app){
         res.send(400, "Invalid credentials, please log in") 
 
       } else {
-        User.findAll({
+         User.findAll({
           attributes: ["id", "username", "latitude", "longitude"]
         }).then(function(allUsers){
           res.send(200, allUsers);
@@ -62,7 +62,7 @@ module.exports = function(app){
           if (!matchedUser) { res.redirect('/'); }
           bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
             if (match) {
-              utils.createSession(req, res, username);
+              utils.createSession(req, res, username, matchedUser.dataValues.id);
             } else {
               res.send(400, "pass does not match")
             }
@@ -150,52 +150,63 @@ module.exports = function(app){
   ///////////////////////////
 
   app.route('/events')
-   .post(function(req, res) {
-     // write all event info into events table
-    sequelize.sync().then(function(){
-      return Event.create({
-        event_name: req.body.event_info.event_name,
-        org_id: req.body.event_info.org_id,
-        venue_name: req.body.event_info.venue_name,
-        street: req.body.event_info.street,
-        city: req.body.event_info.city,
-        state: req.body.event_info.state,
-        event_time: req.body.event_info.event_time,
-        latitude: req.body.event_info.latitude,
-        longitude: req.body.event_info.longitude,
-        phone: req.body.event_info.phone,
-        rating: req.body.event_info.rating,
-        rating_img: req.body.event_info.rating_img,
-        image: req.body.event_info.image,
-        yelp_link: req.body.event_info.yelp_link,
-        createdAt: Date.now()
-      }).then(function(result) {
-        if (result){
-          req.body.invitees.forEach(function(invitee, index){
-            Invitee.create({
-              uid: invitee,
-              eid: result.id,
-              current_status: invitee === result.org_id ? "accepted" : "pending",
-              createdAt: Date.now()
-            })
-            .then(function() {
-              if (index === req.body.invitees.length-1) {
-                res.send(200, "wrote all invitees to db");
-              }
-            });
+    .get(function(req, res) {
+      // query to get all events that current user is attending 
+      var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid =' + req.session.uid + ')';
+      sequelize.query(query).spread(function(eventsList, metadata){
+        eventsList.forEach(function(event, index){
+          // query to get the name of all attendees for specific event
+          query = 'SELECT users.username FROM invitees, users WHERE (invitees.eid = '+ event.eid + ' AND users.id = invitees.uid)';
+          sequelize.query(query).spread(function(attendees, metadata){
+            eventsList[index].attendees = attendees;
+            if (index === eventsList.length - 1) {
+              res.send(200, eventsList);
+            }
           });
-        } else {
-          res.send(500, "unable to write to db");
-        }
+        });
       });
-      // .then();
-       // create a new event
-       // populate fields
-     // write all invitee info into invitees table
-      // response
-     // res.send(200, req.body);
+    }) 
+    .post(function(req, res) {
+       // write all event info into events table
+      sequelize.sync().then(function(){
+        return Event.create({
+          event_name: req.body.event_info.event_name,
+          org_id: req.body.event_info.org_id,
+          venue_name: req.body.event_info.venue_name,
+          street: req.body.event_info.street,
+          city: req.body.event_info.city,
+          state: req.body.event_info.state,
+          event_time: req.body.event_info.event_time,
+          latitude: req.body.event_info.latitude,
+          longitude: req.body.event_info.longitude,
+          phone: req.body.event_info.phone,
+          rating: req.body.event_info.rating,
+          rating_img: req.body.event_info.rating_img,
+          image: req.body.event_info.image,
+          yelp_link: req.body.event_info.yelp_link,
+          createdAt: Date.now()
+        }).then(function(result) {
+          // write all invitee info in to invitee table
+          if (result){
+            req.body.invitees.forEach(function(invitee, index){
+              Invitee.create({
+                uid: invitee,
+                eid: result.id,
+                current_status: invitee === result.org_id ? "accepted" : "pending",
+                createdAt: Date.now()
+              })
+              .then(function() {
+                if (index === req.body.invitees.length-1) {
+                  res.send(200, "wrote all invitees to db");
+                }
+              });
+            });
+          } else {
+            res.send(500, "unable to write event to db");
+          }
+        });
+      });
     });
-  });
 
 };
 

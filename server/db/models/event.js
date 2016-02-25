@@ -5,6 +5,10 @@ var sequelize = new Sequelize(env.dialect+'://'+env.username+':'+env.password+'@
 
 "use strict";
 
+  // Date needs to be passed in the following timestamp format
+  // Timestamp format : "2016-02-27 11:00:00 -0:00"
+  // -0:00 indicates offset from current time zone. Please -0:00 for offset
+  
   var Event = sequelize.define('event',
   {
     event_name : Sequelize.STRING,
@@ -25,25 +29,4 @@ var sequelize = new Sequelize(env.dialect+'://'+env.username+':'+env.password+'@
 
   module.exports = Event;
 
-// {
-//   "event_info": {
-//     "event_name": "coffee meeting",
-//     "org_id": 1,
-//     "venue_name": "Peets Coffee Sausalito",
-//     "street": "123 Main St",
-//     "city": "Sausalito",
-//     "state": "CA",
-//     "event_time": "2016-02-27",
-//     "latitude": 37.7832,
-//     "longitude": -122.4082,
-//     "phone": "650-238-8267",
-//     "rating": 4.5,
-//     "rating_img": "www.google.com",
-//     "image": "www.best.com",
-//     "yelp_link": "www.yelp.com"
-//   },
-//   "invitees": [
-//     1,
-//     2
-//   ]
-// }
+
