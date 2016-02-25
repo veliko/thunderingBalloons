@@ -30,6 +30,7 @@ module.exports = function(app){
   app.route('/')
     .get(function(req,res){
       // var message = "User " + req.session.user + " successfully logged in to root!"
+      console.log('in get / route :');
       if ( !utils.isLoggedIn(req) ) { 
         res.send(400, "Invalid credentials, please log in") 
 
@@ -49,8 +50,12 @@ module.exports = function(app){
   app.route('/login')
     .get(function(req,res){
       // Load login component;
+      console.log('in get login route :');
     })
     .post(function(req,res){
+
+      console.log('in post login route :'); 
+
       var username = req.body.username;
       var password = req.body.password;
 
@@ -100,8 +105,11 @@ module.exports = function(app){
   app.route('/signup')
     .get(function(req,res){
       // Render signup component
+      console.log('in get signup route :');
     })
     .post(function(req,res){
+
+      console.log('in post signup route :');
       var username = req.body.username;
 
       // If username exists, throw error
@@ -141,7 +149,7 @@ module.exports = function(app){
   ///////////////////////////
   app.route('/places')
     .get(utils.checkUser, function(req, res) {
-    
+    console.log('in places route :');
     var term = req.query.term;
     var lat = req.query.lat;
     var lon = req.query.lng;
@@ -157,6 +165,7 @@ module.exports = function(app){
   //////////////////
   app.route('/logout')
     .get(function(req, res) {
+      console.log('in logout route :');
       req.session.destroy(function(){
         console.log("LOGGED OUT!!!");
         res.redirect('/');
@@ -171,7 +180,8 @@ module.exports = function(app){
   app.route('/events')
     .get(utils.checkUser, function(req, res) {
       // query to get all events that current user is attending 
-      var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid =' + req.session.uid + ')';
+      //var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid =' + req.session.uid + ')';
+      var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid = 1)';
       sequelize.query(query).spread(function(eventsList, metadata){
         eventsList.forEach(function(event, index){
           // query to get the name of all attendees for specific event
@@ -187,6 +197,7 @@ module.exports = function(app){
     }) 
     .post(utils.checkUser, function(req, res) {
        // write all event info into events table
+       console.log('in post events route :');
       sequelize.sync().then(function(){
         return Event.create({
           event_name: req.body.event_info.event_name,
@@ -243,6 +254,7 @@ module.exports = function(app){
 
     app.route('/*')
      .get(function(req, res){
+      console.log('redirect all other pages');
       res.redirect('/');
      });
 };
