@@ -48,23 +48,27 @@ module.exports = function(app){
   //////////////////////////
   app.route('/login')
     .get(function(req,res){
-      res.render('../views/login.ejs', {message:"Enter username and password"});
+      //res.render('../views/login.ejs', {message:"Enter username and password"});
     })
     .post(function(req,res){
       var username = req.body.username;
       var password = req.body.password;
+
+      console.log(' user:', username, 'password:', password);
 
       sequelize.sync().then(function() {
         User.findOne({
           where:{'username':username}
         })
         .then(function(matchedUser){
-          console.log("This is the matched user: ", matchedUser);
+          //console.log("This is the matched user: ", matchedUser);
           if (!matchedUser) { res.redirect('/'); }
           else {
             bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
               if (match) {
                 utils.createSession(req, res, username, matchedUser.dataValues.id);
+                console.log('requestID', req.sessionID);
+                res.send(200, req.sessionID)
               } else {
                 res.send(400, "pass does not match")
               }

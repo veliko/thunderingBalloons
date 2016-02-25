@@ -3,7 +3,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       placesList: [],
-      addressesList: []
+      addressesList: [],
+      currentPage: '/login'
     };
   }
 
@@ -31,22 +32,27 @@ class App extends React.Component {
     if(data.addressesList) {
       this.setState({addressesList : data.addressesList});
     }
+    if(data.currentPage) {
+      this.setState({currentPage : data.currentPage});
+    }
   }
 
   render() {
-    // if (nosesion) {
-    //   return {
-    //     login component
-    //   }
-    // } else 
-
-    return (
-      <div>
-        <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
-        <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} onRemove = {this.removeAddress.bind(this)}/>
-        <PlaceList places = {this.state.placesList} />
-      </div>
-    )
+    if (!window.localStorage.session) {
+      return (
+        <div>
+          <Login setStates = {this.setStates.bind(this)}/>
+        </div>
+        )
+    } else {
+      return (
+        <div>
+          <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
+          <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} onRemove = {this.removeAddress.bind(this)}/>
+          <PlaceList places = {this.state.placesList} />
+        </div>
+      )
+    }
   }
 }
 
