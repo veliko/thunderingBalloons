@@ -1,7 +1,12 @@
 {
 	"development":{
+<<<<<<< d3e2cea2157b0dd2dd5ee4a047c48d6a533e459f
 	"username":"maryam",
 	"password":"12345",
+=======
+	"username":"Jake",
+	"password":"123",
+>>>>>>> Implement /invite PUT and /* GET routes
 	"database":"thunderingballoons",
 	"host":"127.0.0.1",
 	"dialect":"postgres",
