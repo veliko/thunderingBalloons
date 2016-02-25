@@ -1,4 +1,6 @@
 var User = require('../db/models/user');
+var Event = require('../db/models/event');
+var Invitee = require('../db/models/invitee');
 var config = require('../db/config/config');
 var env = config.development;
 var flash = require('connect-flash');
@@ -27,23 +29,18 @@ module.exports = function(app){
   /////////////////////////
   app.route('/')
     .get(function(req,res){
+      // var message = "User " + req.session.user + " successfully logged in to root!"
       if ( !utils.isLoggedIn(req) ) { 
         res.send(400, "Invalid credentials, please log in") 
+
       } else {
-        res.send(200, "User successfully logged in to root!");
+         User.findAll({
+          attributes: ["id", "username", "latitude", "longitude"]
+        }).then(function(allUsers){
+          res.send(200, allUsers);
+        });
       }
     });
-    // .post(function(req,res){
-    //   var id = req.body.id;
-    //   sequelize.sync().then(function(){
-    //     return User.findAll({
-    //       where:{'id':id}
-    //     });
-    //   }).then(function(result){
-    //     console.log('fetched from database: ',result);
-    //     res.json(result);
-    //   });
-    // });
 
 
   //////////////////////////
@@ -56,26 +53,17 @@ module.exports = function(app){
     .post(function(req,res){
       var username = req.body.username;
       var password = req.body.password;
-      //fetch hashedpassword and salt for entered username
+
       sequelize.sync().then(function() {
         User.findOne({
           where:{'username':username}
         })
         .then(function(matchedUser){
-          if (!matchedUser) { response.send(400, "Invalid User"); }
-
+          if (!matchedUser) { res.redirect('/'); }
           bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
             if (match) {
-              // return an an array with users and location
-              console.log("matched!");
-              User.findAll({
-                attributes: ["username", "latitude", "longitude"]
-              }).then(function(allUsers){
-                utils.createSession(req, res, username);
-                // res.send(200, allUsers);
-              });
+              utils.createSession(req, res, username, matchedUser.dataValues.id);
             } else {
-              console.log("try again");
               res.send(400, "pass does not match")
             }
           });
@@ -89,6 +77,7 @@ module.exports = function(app){
   ///////////////////////////
 
   // extra route to see if chosen user name exists
+  // useful when creating a new profile
   app.route('/signup/users/:username')
     .get(function(req, res){
       sequelize.sync().then(function() {
@@ -127,10 +116,13 @@ module.exports = function(app){
       });
     });
 
+
   ///////////////////////////
   // get request from yelp //
   ///////////////////////////
-  app.get('/places', function(req, res) {
+  app.route('/places')
+    .get(utils.checkUser, function(req, res) {
+    
     var term = req.query.term;
     var lat = req.query.lat;
     var lon = req.query.lng;
@@ -140,6 +132,10 @@ module.exports = function(app){
     });
   });
 
+
+  //////////////////
+  // logout route //
+  //////////////////
   app.route('/logout')
     .get(function(req, res) {
       req.session.destroy(function(){
@@ -148,4 +144,72 @@ module.exports = function(app){
       });
     });
 
+
+  ///////////////////////////
+  // event routes handling //
+  ///////////////////////////
+
+  app.route('/events')
+    .get(function(req, res) {
+      // query to get all events that current user is attending 
+      var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid =' + req.session.uid + ')';
+      sequelize.query(query).spread(function(eventsList, metadata){
+        eventsList.forEach(function(event, index){
+          // query to get the name of all attendees for specific event
+          query = 'SELECT users.username FROM invitees, users WHERE (invitees.eid = '+ event.eid + ' AND users.id = invitees.uid)';
+          sequelize.query(query).spread(function(attendees, metadata){
+            eventsList[index].attendees = attendees;
+            if (index === eventsList.length - 1) {
+              res.send(200, eventsList);
+            }
+          });
+        });
+      });
+    }) 
+    .post(function(req, res) {
+       // write all event info into events table
+      sequelize.sync().then(function(){
+        return Event.create({
+          event_name: req.body.event_info.event_name,
+          org_id: req.body.event_info.org_id,
+          venue_name: req.body.event_info.venue_name,
+          street: req.body.event_info.street,
+          city: req.body.event_info.city,
+          state: req.body.event_info.state,
+          event_time: req.body.event_info.event_time,
+          latitude: req.body.event_info.latitude,
+          longitude: req.body.event_info.longitude,
+          phone: req.body.event_info.phone,
+          rating: req.body.event_info.rating,
+          rating_img: req.body.event_info.rating_img,
+          image: req.body.event_info.image,
+          yelp_link: req.body.event_info.yelp_link,
+          createdAt: Date.now()
+        }).then(function(result) {
+          // write all invitee info in to invitee table
+          if (result){
+            req.body.invitees.forEach(function(invitee, index){
+              Invitee.create({
+                uid: invitee,
+                eid: result.id,
+                current_status: invitee === result.org_id ? "accepted" : "pending",
+                createdAt: Date.now()
+              })
+              .then(function() {
+                if (index === req.body.invitees.length-1) {
+                  res.send(200, "wrote all invitees to db");
+                }
+              });
+            });
+          } else {
+            res.send(500, "unable to write event to db");
+          }
+        });
+      });
+    });
+
 };
+
+
+
+

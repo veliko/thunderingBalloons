@@ -25,10 +25,10 @@ var env = config.development;
 // Apply modules to app //
 //////////////////////////
 app.use(bodyParser.json());
-// app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
+
 //add CORS support to the server
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -37,11 +37,6 @@ app.use(function(req, res, next) {
 });
 
 app.use(session({secret: "TestSecret"}));
-
-// app.post('/signup', function(req, res){
-//   console.log("got new request: ", req.body);
-//   res.send(200, "OK");
-// });
 
 require('./routes/routes.js')(app);
 

@@ -1,7 +1,7 @@
 {
 	"development":{
-	"username":"Jake",
-	"password":"123",
+	"username":"velikomarkov",
+	"password":"password",
 	"database":"thunderingballoons",
 	"host":"127.0.0.1",
 	"dialect":"postgres",
