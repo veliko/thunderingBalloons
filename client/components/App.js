@@ -37,7 +37,7 @@ class App extends React.Component {
     if (!window.localStorage.session) {
       return (
         <div>
-          <SignUp />
+          <Login />
         </div>
         )
     } else {
