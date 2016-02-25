@@ -48,7 +48,7 @@ module.exports = function(app){
   //////////////////////////
   app.route('/login')
     .get(function(req,res){
-      //res.render('../views/login.ejs', {message:"Enter username and password"});
+      // Load login component;
     })
     .post(function(req,res){
       var username = req.body.username;
@@ -99,7 +99,7 @@ module.exports = function(app){
   // main signup route logic  
   app.route('/signup')
     .get(function(req,res){
-      res.render('../views/signup.ejs', {message:"Inside signup page"});
+      // Render signup component
     })
     .post(function(req,res){
       var username = req.body.username;
