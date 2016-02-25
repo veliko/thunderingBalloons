@@ -26,8 +26,9 @@ class App extends React.Component {
   }
 
   setCurrentPage (currentPage, event) {
-  console.log('curent:', currentPage, 'event', event);
-  event.preventDefault();
+  if(event) {
+    event.preventDefault();
+  }
   this.setStates({currentPage: currentPage});
 }
 
