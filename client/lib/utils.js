@@ -6,14 +6,25 @@ var signup = function () {
 	codeAddress(address, function(lat, lng){
     var query = {username:username, password:password, latitude:lat, longitude:lng};
     $.post('http://localhost:8080/signup', query)
-      .done(function (data, req, res, body){
+      .done(function (data){
         console.log('successful signup', data);
-        console.log('req',req);
         window.localStorage.setItem('session', data);
-        console.log('res',res);
-        console.log('body',body);
     }).fail(function (error){
       console.error('Failed to create user!', error);
     });
+  });
+}
+
+var login = function () {
+  var username = $('#login-username').val();
+  var password = $('#login-password').val();
+
+  var query = {username:username, password:password};
+  $.post('http://localhost:8080/login', query)
+    .done(function (data){
+      console.log('successful signup', data);
+      window.localStorage.setItem('session', data);
+  }).fail(function (error){
+    console.error('Failed to login user!', error);
   });
 }
