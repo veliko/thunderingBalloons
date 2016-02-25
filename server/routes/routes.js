@@ -59,15 +59,18 @@ module.exports = function(app){
           where:{'username':username}
         })
         .then(function(matchedUser){
+          console.log("This is the matched user: ", matchedUser);
           if (!matchedUser) { res.redirect('/'); }
-          bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
-            if (match) {
-              utils.createSession(req, res, username, matchedUser.dataValues.id);
-            } else {
-              res.send(400, "pass does not match")
-            }
-          });
-        })
+          else {
+            bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
+              if (match) {
+                utils.createSession(req, res, username, matchedUser.dataValues.id);
+              } else {
+                res.send(400, "pass does not match")
+              }
+            });
+          }
+        });
       });
     });
 
@@ -95,24 +98,36 @@ module.exports = function(app){
       res.render('../views/signup.ejs', {message:"Inside signup page"});
     })
     .post(function(req,res){
-      bcrypt.genSalt(10, function(err, salt){
-        console.log("salt: ", salt, "\nuser: ", req.body.username);
-        console.log("request looks like this: ", req.body);
-        bcrypt.hash(req.body.password, salt, function(err, hash){
-          sequelize.sync().then(function(){
-            return User.create({
-              username: req.body.username,
-              hash: hash,
-              email: req.body.email,
-              latitude: req.body.latitude,
-              longitude: req.body.longitude,
-              createdAt: Date.now()
-            });
-          }).then(function(result){
-            console.log('posted to database.');
-            res.send(200, "Created new user...");
-          })
+      var username = req.body.username;
+
+      // If username exists, throw error
+      sequelize.sync().then(function() {
+        User.findOne({
+          where:{'username':username}
         })
+        .then(function(matchedUser){
+          if (matchedUser) { 
+          res.send(500, "Username " + username + " is already taken."); 
+          } else {
+            bcrypt.genSalt(10, function(err, salt){
+              bcrypt.hash(req.body.password, salt, function(err, hash){
+                sequelize.sync().then(function(){
+                  return User.create({
+                    username: req.body.username,
+                    hash: hash,
+                    email: req.body.email,
+                    latitude: req.body.latitude,
+                    longitude: req.body.longitude,
+                    createdAt: Date.now()
+                  });
+                }).then(function(result){
+                  console.log('posted user to database');
+                  res.redirect(200, "/login");
+                })
+              })
+            });
+          }
+        });
       });
     });
 
@@ -150,7 +165,7 @@ module.exports = function(app){
   ///////////////////////////
 
   app.route('/events')
-    .get(function(req, res) {
+    .get(utils.checkUser, function(req, res) {
       // query to get all events that current user is attending 
       var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid =' + req.session.uid + ')';
       sequelize.query(query).spread(function(eventsList, metadata){
@@ -166,7 +181,7 @@ module.exports = function(app){
         });
       });
     }) 
-    .post(function(req, res) {
+    .post(utils.checkUser, function(req, res) {
        // write all event info into events table
       sequelize.sync().then(function(){
         return Event.create({
@@ -208,6 +223,24 @@ module.exports = function(app){
       });
     });
 
+    app.route('/invite')
+     .put(utils.checkUser, function(req, res) {
+      var uid = req.session.uid;
+      var eid = req.body.eid;
+      var status = req.body.status;
+
+      var query = "UPDATE invitees SET current_status = '" + status + "' WHERE (uid = " + uid + " and eid = " + eid + ")";
+      sequelize.query(query).spread(function(updated, metadata){
+        if (updated) {
+          res.send(200, "Invite updated")
+        }
+      });
+     });
+
+    app.route('/*')
+     .get(function(req, res){
+      res.redirect('/');
+     });
 };
 
 
