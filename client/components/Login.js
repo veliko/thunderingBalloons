@@ -9,8 +9,7 @@ var Login = (props) => (
         <input id='login-password' type="password" name="password" required />
       </div>
       <button type="submit" value = "Submit" onClick = {() => login(props.setStates)} >Submit</button>
-  <p>Need an account? <a href="/signup">Signup</a></p>
-  <p>Or go <a href="/">home</a>.</p>
+  <p>Need an account? <a href onClick={props.onRedirect.bind(this, '/signup')}>Signup</a></p>
 </div>
 );
 

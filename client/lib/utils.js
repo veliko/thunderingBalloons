@@ -1,4 +1,4 @@
-var signup = function () {
+var signup = function (callback) {
 	var username = $('#signup-username').val();
 	var password = $('#signup-password').val();
 	var address = $('#signup-address').val();
@@ -9,6 +9,7 @@ var signup = function () {
       .done(function (data){
         console.log('successful signup', data);
         window.localStorage.setItem('session', data);
+        callback({currentPage: '/'});
     }).fail(function (error){
       console.error('Failed to create user!', error);
     });
@@ -29,3 +30,4 @@ var login = function (callback) {
     console.error('Failed to login user!', error);
   });
 }
+
