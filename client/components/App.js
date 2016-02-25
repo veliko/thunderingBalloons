@@ -34,6 +34,12 @@ class App extends React.Component {
   }
 
   render() {
+    // if (nosesion) {
+    //   return {
+    //     login component
+    //   }
+    // } else 
+
     return (
       <div>
         <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
