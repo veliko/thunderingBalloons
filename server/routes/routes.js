@@ -6,6 +6,7 @@ var env = config.development;
 var flash = require('connect-flash');
 var bcrypt = require('bcrypt');
 var utils = require('../utils/utils');
+var path = require('path');
 
 // db modules
 var Sequelize = require('sequelize');
@@ -23,25 +24,13 @@ var searchYelp = require('../utils/yelp');
 /////////////////////////////////////////////////////
 module.exports = function(app){
 
-
   /////////////////////////
   // root route handling //
   /////////////////////////
   app.route('/')
-    .get(function(req,res){
-      // var message = "User " + req.session.user + " successfully logged in to root!"
-      console.log('in get / route :');
-      if ( !utils.isLoggedIn(req) ) { 
-        res.send(400, "Invalid credentials, please log in") 
-
-      } else {
-         User.findAll({
-          attributes: ["id", "username", "latitude", "longitude"]
-        }).then(function(allUsers){
-          res.send(200, allUsers);
-        });
-      }
-    });
+    .get(utils.checkUser, function(req, res) {
+      res.sendfile(path.resolve('client/first.html')); 
+  });
 
 
   //////////////////////////
@@ -50,32 +39,25 @@ module.exports = function(app){
   app.route('/login')
     .get(function(req,res){
       // Load login component;
-      console.log('in get login route :');
+      res.render('login');
     })
     .post(function(req,res){
 
-      console.log('in post login route :'); 
-
       var username = req.body.username;
       var password = req.body.password;
-
-      console.log(' user:', username, 'password:', password);
 
       sequelize.sync().then(function() {
         User.findOne({
           where:{'username':username}
         })
         .then(function(matchedUser){
-          //console.log("This is the matched user: ", matchedUser);
           if (!matchedUser) { res.redirect('/'); }
           else {
             bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
               if (match) {
                 utils.createSession(req, res, username, matchedUser.dataValues.id);
-                console.log('requestID', req.sessionID);
-                res.send(200, req.sessionID)
               } else {
-                res.send(400, "pass does not match")
+                res.render('login');
               }
             });
           }
@@ -105,11 +87,9 @@ module.exports = function(app){
   app.route('/signup')
     .get(function(req,res){
       // Render signup component
-      console.log('in get signup route :');
+      res.render('signup');
     })
     .post(function(req,res){
-
-      console.log('in post signup route :');
       var username = req.body.username;
 
       // If username exists, throw error
@@ -143,6 +123,18 @@ module.exports = function(app){
       });
     });
 
+  ///////////////////////////
+  // get request from users //
+  ///////////////////////////
+
+  app.route('/users')
+   .get(utils.checkUser, function(req, res) {
+     User.findAll({
+       attributes: ["id", "username", "latitude", "longitude"]
+     }).then(function(allUsers){
+       res.send(200, allUsers);
+     });
+   });
 
   ///////////////////////////
   // get request from yelp //
@@ -165,7 +157,6 @@ module.exports = function(app){
   //////////////////
   app.route('/logout')
     .get(function(req, res) {
-      console.log('in logout route :');
       req.session.destroy(function(){
         console.log("LOGGED OUT!!!");
         res.redirect('/');
@@ -180,8 +171,8 @@ module.exports = function(app){
   app.route('/events')
     .get(utils.checkUser, function(req, res) {
       // query to get all events that current user is attending 
-      //var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid =' + req.session.uid + ')';
-      var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid = 1)';
+      var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid =' + req.session.uid + ')';
+      //var query = 'SELECT * FROM invitees, events WHERE (events.id = invitees.eid AND invitees.uid = 1)';
       sequelize.query(query).spread(function(eventsList, metadata){
         eventsList.forEach(function(event, index){
           // query to get the name of all attendees for specific event
@@ -254,7 +245,6 @@ module.exports = function(app){
 
     app.route('/*')
      .get(function(req, res){
-      console.log('redirect all other pages');
       res.redirect('/');
      });
 };
