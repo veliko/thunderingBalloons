@@ -45,22 +45,22 @@ class App extends React.Component {
   }
 
   render() {
-    if (!window.localStorage.session) {
-      if(this.state.currentPage === '/signup'){
-        return (
-        <div>
-          <SignUp onRedirect = {this.setCurrentPage.bind(this)}/>
-        </div>
-        )
-      }else{
-        return (
-        <div>
-          <Login onRedirect = {this.setCurrentPage.bind(this)}/>
-        </div>
-        )
-      }
+    // if (!window.localStorage.session) {
+    //   if(this.state.currentPage === '/signup'){
+    //     return (
+    //     <div>
+    //       <SignUp onRedirect = {this.setCurrentPage.bind(this)}/>
+    //     </div>
+    //     )
+    //   }else{
+    //     return (
+    //     <div>
+    //       <Login onRedirect = {this.setCurrentPage.bind(this)}/>
+    //     </div>
+    //     )
+    //   }
       
-    } else {
+    // } else {
       return (
         <div>
           <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
@@ -68,7 +68,7 @@ class App extends React.Component {
           <PlaceList places = {this.state.placesList} />
         </div>
       )
-    }
+    //}
   }
 }
 
