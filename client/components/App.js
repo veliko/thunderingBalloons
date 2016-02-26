@@ -4,25 +4,21 @@ class App extends React.Component {
     this.state = {
       placesList: [],
       addressesList: [],
+      eventsList: [],
       currentPage: '/login'
     };
   }
 
-  // handleClick(event){
-  //  var videoName = event.target.innerHTML;
-  //  for(var i = 0 ; i < this.state.videoList.length ; i++){
-  //   if(this.state.videoList[i].snippet.title === videoName){
-  //     this.setState({currentlyPlaying : this.state.videoList[i]});
-  //   }
-  //  }
-
-  //}
   removeAddress (address, event){
     event.preventDefault();
     var addressesList = this.state.addressesList.filter(function(adrs){
       return address!== adrs;
     });
     this.setStates({addressesList: addressesList});
+  }
+
+  ListAllEvents(events){
+
   }
 
   setCurrentPage (currentPage, event) {
@@ -33,6 +29,7 @@ class App extends React.Component {
 }
 
   setStates(data) {
+
     if(data.placesList) {
       this.setState({placesList : data.placesList});
     }
@@ -40,35 +37,47 @@ class App extends React.Component {
       this.setState({addressesList : data.addressesList});
     }
     if(data.currentPage) {
+      //console.log('inside currentPage:', data.currentPage);
       this.setState({currentPage : data.currentPage});
+    }
+    if(data.eventsList) {
+      //console.log('inside eventsList:', Array.isArray(data.eventsList));
+      this.setState({eventsList : data.eventsList});
     }
   }
 
   render() {
-    // if (!window.localStorage.session) {
-    //   if(this.state.currentPage === '/signup'){
-    //     return (
-    //     <div>
-    //       <SignUp onRedirect = {this.setCurrentPage.bind(this)}/>
-    //     </div>
-    //     )
-    //   }else{
-    //     return (
-    //     <div>
-    //       <Login onRedirect = {this.setCurrentPage.bind(this)}/>
-    //     </div>
-    //     )
-    //   }
-      
-    // } else {
-      return (
+      if(this.state.currentPage === '/myEvents'){
+        return (
         <div>
-          <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
-          <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} onRemove = {this.removeAddress.bind(this)}/>
-          <PlaceList places = {this.state.placesList} />
+          <div id='nav'>
+            <div onClick={() => getEvents(this.setStates.bind(this))}> My Events </div>
+            <div onClick={() => addEvents(this.setStates.bind(this))}> Add Events </div>
+            <div><a href='/logout'>Log Out</a></div>
+          </div>
+          <div>
+            <EventList events = {this.state.eventsList}/>
+          </div>
+        </div>
+        )
+      }else{
+        return (
+        <div>
+          <div id='nav'>
+            <div onClick={() => getEvents(this.setStates.bind(this))}> My Events</div>
+            <div onClick={() => addEvents()}>Add Events</div>
+            <div><a href='/logout'>Log Out</a></div>
+          </div>
+          <div>
+            <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
+            <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} onRemove = {this.removeAddress.bind(this)}/>
+            <PlaceList places = {this.state.placesList} />
+          </div>
         </div>
       )
-    //}
+      }
+      
+      
   }
 }
 
