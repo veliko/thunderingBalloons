@@ -51,8 +51,8 @@ class App extends React.Component {
         return (
         <div>
           <div id='nav'>
-            <div onClick={() =>getEvents(this.setStates.bind(this))}> My Events</div>
-            <div onClick={() => addEvents()}>Add Events</div>
+            <div onClick={() => getEvents(this.setStates.bind(this))}> My Events </div>
+            <div onClick={() => addEvents(this.setStates.bind(this))}> Add Events </div>
             <div><a href='/logout'>Log Out</a></div>
           </div>
           <div>

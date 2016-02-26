@@ -12,13 +12,12 @@ var getEvents = function (callback) {
 
   $.get('http://localhost:8080/events')
       .done(function (data){
-       console.log('successful events', JSON.stringify(data));
        callback({eventsList: data, currentPage: '/myEvents'});
     }).fail(function (error){
       console.error('Failed to receive events!', error);
     });
 }
 
-var addEvents = function () {
-
+var addEvents = function (callback) {
+  callback({currentPage: '/addEvent'});
 }
