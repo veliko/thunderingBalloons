@@ -70,7 +70,7 @@ class App extends React.Component {
           </div>
           <div>
             <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
-            <AddressList addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)} onRemove = {this.removeAddress.bind(this)}/>
+            <AddressList addresses = {this.state.addressesList} onRemove = {this.removeAddress.bind(this)}/>
             <PlaceList places = {this.state.placesList} />
           </div>
         </div>
