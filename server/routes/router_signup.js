@@ -64,7 +64,7 @@ signupRouter.route('/')
   });
 
 // extra route to see if chosen user name exists
-signupRouter.route('/signup/users/:username')
+signupRouter.route('/users/:username')
   .get(function(req, res){
     sequelize.sync().then(function() {
       User.findOne({

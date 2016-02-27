@@ -29,21 +29,9 @@ var searchYelp = function( keyword, latitude, longitude, callback ) {
   })
   .catch(function (err) {
     console.error('search Yelp Error: ', err);
-});
+  });
  
 }
 
-// var getCenter = function( addresses ) {
-//   // addresses is an array of objects in the following form [{lat: 123, lon: -123}, ... ,]
-//   var sumLat = 0, sumLon = 0;
-//   var numOfAddresses = addresses.length;
-
-//   $.each(addresses, function(index, address) {
-//     sumLat += address['lat'];
-//     sumLon += address['lon'];
-//   });
-
-//   return {lat: sumLat/numOfAddresses, lon: sumLon/numOfAddresses};
-// }
 
 module.exports = searchYelp;
