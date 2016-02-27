@@ -4,7 +4,7 @@ var searchPlaces = function (options, callback) {
 
   codeAddress(address, function(lat, lng){
     var query = {lat:lat, lng:lng, term:term};
-    $.get('http://localhost:8080/places', query)
+    $.get('/places', query)
       .done(function (data){
         console.log('successfully YELP get', data);
         callback({placesList: data.businesses});

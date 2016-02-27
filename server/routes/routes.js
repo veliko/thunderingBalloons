@@ -1,27 +1,29 @@
-var User = require('../db/models/user');
-var Event = require('../db/models/event');
-var Invitee = require('../db/models/invitee');
-var config = require('../db/config/config');
-var env = config.development;
+// utility functions
 var flash = require('connect-flash');
 var bcrypt = require('bcrypt');
 var utils = require('../utils/utils');
 var path = require('path');
+var searchYelp = require('../utils/yelp');
 
-// db modules
+// db helpers
+var config = require('../db/config/config');
+var env = config.development;
 var Sequelize = require('sequelize');
 var conString = env.dialect+'://'+env.username+':'+env.password+'@'+env.host+':'+env.port+'/'+env.database;
 var sequelize = new Sequelize(conString, {
   dialect: 'postgres',
 });
 
-// Yelp.js functions
-var searchYelp = require('../utils/yelp');
+//db models
+var User = require('../db/models/user');
+var Event = require('../db/models/event');
+var Invitee = require('../db/models/invitee');
+var Message = require('../db/models/message');
 
 
-/////////////////////////////////////////////////////
-// configure endpoints //////////////////////////////
-/////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+// configure endpoints ///////////////////////////////
+//////////////////////////////////////////////////////
 module.exports = function(app){
 
   /////////////////////////
@@ -141,15 +143,16 @@ module.exports = function(app){
   ///////////////////////////
   app.route('/places')
     .get(utils.checkUser, function(req, res) {
-    console.log('in places route :');
-    var term = req.query.term;
-    var lat = req.query.lat;
-    var lon = req.query.lng;
+      console.log('in places route :');
+      var term = req.query.term;
+      var lat = req.query.lat;
+      var lon = req.query.lng;
 
-    searchYelp(term, lat, lon, function(data){
-      res.json(data);
+      console.log('inside yelp places route');
+      searchYelp(term, lat, lon, function(data){
+        res.json(data);
+      });
     });
-  });
 
 
   //////////////////
@@ -229,24 +232,67 @@ module.exports = function(app){
       });
     });
 
+
+    ///////////////////////////
+    // invite route handling //
+    ///////////////////////////
+
     app.route('/invite')
-     .put(utils.checkUser, function(req, res) {
-      var uid = req.session.uid;
-      var eid = req.body.eid;
-      var status = req.body.status;
+      .put(utils.checkUser, function(req, res) {
+        var uid = req.session.uid;
+        var eid = req.body.eid;
+        var status = req.body.status;
 
-      var query = "UPDATE invitees SET current_status = '" + status + "' WHERE (uid = " + uid + " and eid = " + eid + ")";
-      sequelize.query(query).spread(function(updated, metadata){
-        if (updated) {
-          res.send(200, "Invite updated")
-        }
+        var query = "UPDATE invitees SET current_status = '" + status + "' WHERE (uid = " + uid + " and eid = " + eid + ")";
+        sequelize.query(query).spread(function(updated, metadata){
+          if (updated) {
+            res.send(200, "Invite updated")
+          }
+        });
       });
-     });
 
+
+    /////////////////////////////
+    // messages route handling //
+    /////////////////////////////
+    app.route('/messages')
+      .post(utils.checkUser, function(req, res){
+        console.log("message body: ", req.body.message);
+        return Message.create({
+          uid: req.body.uid,
+          eid: req.body.eid,
+          message: req.body.message,
+          createdAt: Date.now()
+        }).then(function(storedMessage){
+          res.send(200, storedMessage);
+        });
+      });
+
+    app.route('/messages/:eid')
+      .get(utils.checkUser, function(req, res){
+        var query = "SELECT users.username, event_messages.message " + 
+                    "FROM event_messages, users " +
+                    "WHERE (event_messages.eid = " + req.params.eid + " AND event_messages.uid = users.id)";
+        sequelize.query(query).spread(function(messages, metadata){
+          console.log(messages);
+          if (messages) {
+            res.send(200, messages);
+          }
+        });
+      });
+
+
+
+    /////////////////////////////
+    // wildcard route handling //
+    /////////////////////////////
     app.route('/*')
-     .get(function(req, res){
-      res.redirect('/');
-     });
+      .get(function(req, res){
+        console.log('defaulting to wildcard route.');
+        console.log('req.params: ', req.params);
+        res.redirect('/');
+      });
+
 };
 
 
