@@ -35,100 +35,9 @@ module.exports = function(app){
   });
 
 
-  //////////////////////////
-  // login route handling //
-  //////////////////////////
-  app.route('/login')
-    .get(function(req,res){
-      // Load login component;
-      res.render('login');
-    })
-    .post(function(req,res){
-
-      var username = req.body.username;
-      var password = req.body.password;
-
-      sequelize.sync().then(function() {
-        User.findOne({
-          where:{'username':username}
-        })
-        .then(function(matchedUser){
-          if (!matchedUser) { res.redirect('/'); }
-          else {
-            bcrypt.compare(password, matchedUser.dataValues.hash, function(err, match) {
-              if (match) {
-                utils.createSession(req, res, username, matchedUser.dataValues.id);
-              } else {
-                res.render('login');
-              }
-            });
-          }
-        });
-      });
-    });
-
-
-  ///////////////////////////
-  // signup route handling //
-  ///////////////////////////
-
-  // extra route to see if chosen user name exists
-  // useful when creating a new profile
-  app.route('/signup/users/:username')
-    .get(function(req, res){
-      sequelize.sync().then(function() {
-        User.findOne({
-          where:{'username': req.params.username}
-        }).then(function(result){
-          res.send(200, result ? true : false);
-        });
-      });
-    });
-
-  // main signup route logic  
-  app.route('/signup')
-    .get(function(req,res){
-      // Render signup component
-      res.render('signup');
-    })
-    .post(function(req,res){
-      var username = req.body.username;
-
-      // If username exists, throw error
-      sequelize.sync().then(function() {
-        User.findOne({
-          where:{'username':username}
-        })
-        .then(function(matchedUser){
-          if (matchedUser) { 
-          res.send(500, "Username " + username + " is already taken."); 
-          } else {
-            bcrypt.genSalt(10, function(err, salt){
-              bcrypt.hash(req.body.password, salt, function(err, hash){
-                sequelize.sync().then(function(){
-                  return User.create({
-                    username: req.body.username,
-                    hash: hash,
-                    email: req.body.email,
-                    latitude: req.body.latitude,
-                    longitude: req.body.longitude,
-                    createdAt: Date.now()
-                  });
-                }).then(function(result){
-                  console.log('posted user to database');
-                  res.redirect(200, "/login");
-                })
-              })
-            });
-          }
-        });
-      });
-    });
-
-  ///////////////////////////
+  ////////////////////////////
   // get request from users //
-  ///////////////////////////
-
+  ////////////////////////////
   app.route('/users')
    .get(utils.checkUser, function(req, res) {
      User.findAll({
@@ -137,6 +46,7 @@ module.exports = function(app){
        res.send(200, allUsers);
      });
    });
+
 
   ///////////////////////////
   // get request from yelp //
@@ -236,7 +146,6 @@ module.exports = function(app){
     ///////////////////////////
     // invite route handling //
     ///////////////////////////
-
     app.route('/invite')
       .put(utils.checkUser, function(req, res) {
         var uid = req.session.uid;
@@ -280,7 +189,6 @@ module.exports = function(app){
           }
         });
       });
-
 
 
     /////////////////////////////
