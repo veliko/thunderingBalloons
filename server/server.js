@@ -24,17 +24,18 @@ var env = config.development;
 // router modules //
 ////////////////////
 
-// "/"
+// "/",  "/logout", "/*"
 var rootRouter = require('./routes/router_root');
 // "/signup"
 var signupRouter = require('./routes/router_signup');
 // "/login"
 var loginRouter = require('./routes/router_login');
-// "/logout"
 // "/users"
 // "/invite"
 // "/events"
+var eventsRouter = require('./routes/router_events');
 // "/messages"
+var messagesRouter = require('./routes/router_messages');
 // "/places"
 
 
@@ -43,7 +44,7 @@ var loginRouter = require('./routes/router_login');
 //////////////////////////////////////
 app.set('views', __dirname + '/views');
 app.set('view engine','ejs');
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -62,6 +63,8 @@ app.use(session({
 
 app.use('/login', loginRouter);
 app.use('/signup', signupRouter);
+app.use('/events', eventsRouter);
+app.use('/messages', messagesRouter);
 require('./routes/routes.js')(app);
 app.use('/', rootRouter);
 

@@ -27,7 +27,7 @@ var User = require('../db/models/user');
 // route handling //
 ////////////////////
 
-// main signup route
+// main login route
 loginRouter.route('/')
   .get(function(req,res){
     res.render('login');

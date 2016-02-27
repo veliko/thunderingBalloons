@@ -1,6 +1,6 @@
-//////////////////
-// login router //
-//////////////////
+/////////////////
+// root router //
+/////////////////
 
 // dependencies
 var utils = require('../utils/utils');
@@ -19,7 +19,15 @@ var rootRouter = express.Router();
 rootRouter.route('/')
   .get(utils.checkUser, function(req, res) {
     res.sendfile(path.resolve('client/first.html')); 
-});
+  });
+
+// logout route
+rootRouter.route('/logout')
+  .get(function(req, res) {
+    req.session.destroy(function(){
+      res.redirect('/');
+    });
+  });
 
 // wildcard route
 rootRouter.route('/*')
