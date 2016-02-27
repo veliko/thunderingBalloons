@@ -35,7 +35,7 @@ inviteRouter.route('/')
       if (updated) {
         res.send(200, "Invite updated")
       }
-    });
+    }).catch(utils.handleError(req, res, 500, "Error while updating invitee information in database."));
   });
 
 

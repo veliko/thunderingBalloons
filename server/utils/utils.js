@@ -18,3 +18,10 @@ exports.checkUser = function(req, res, next) {
     next();
   }
 };
+
+exports.handleError = function(req, res, statusCode, message) {
+  return function(error) {
+    console.log(error);
+    res.send(statusCode, message);
+  }
+};

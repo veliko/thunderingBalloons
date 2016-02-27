@@ -3,6 +3,7 @@
 ///////////////////
 
 // dependencies
+var utils = require('../utils/utils');
 var bcrypt = require('bcrypt');
 
 // create express router 
@@ -39,7 +40,7 @@ signupRouter.route('/')
       })
       .then(function(matchedUser){
         if (matchedUser) { 
-        res.send(500, "Username " + username + " is already taken."); 
+          res.send(500, "Username " + username + " is already taken."); 
         } else {
           bcrypt.genSalt(10, function(err, salt){
             bcrypt.hash(req.body.password, salt, function(err, hash){
@@ -52,15 +53,15 @@ signupRouter.route('/')
                   longitude: req.body.longitude,
                   createdAt: Date.now()
                 });
-              }).then(function(result){
-                console.log('posted user to database');
-                res.redirect("/login");
               })
-            })
+              .then(function(result){
+                res.redirect("/login");
+              }).catch(utils.handleError(req, res, 500, "Error writing new user to database"));
+            });
           });
         }
-      });
-    });
+      }).catch(utils.handleError(req, res, 500, "Error while trying to find user in database"));
+    }).catch(utils.handleError(req, res, 500, "Error while trying to sync with database."));
   });
 
 // extra route to see if chosen user name exists
@@ -71,8 +72,8 @@ signupRouter.route('/users/:username')
         where:{'username': req.params.username}
       }).then(function(result){
         res.send(200, result ? true : false);
-      });
-    });
+      }).catch(utils.handleError(req, res, 500, "Error reading username from database."));
+    }).catch(utils.handleError(req, res, 500, "Error while trying to sync with database."));
   });
 
 

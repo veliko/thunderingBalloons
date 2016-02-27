@@ -29,7 +29,9 @@ var Message = require('../db/models/message');
 // main messages route
 messagesRouter.route('/')
   .post(utils.checkUser, function(req, res){
-    console.log("message body: ", req.body.message);
+    if (!req.body.uid || !req.body.eid || !req.body.message) { 
+      res.send(400, "Error writing message: missing details.");
+    }
     return Message.create({
       uid: req.body.uid,
       eid: req.body.eid,
@@ -37,12 +39,13 @@ messagesRouter.route('/')
       createdAt: Date.now()
     }).then(function(storedMessage){
       res.send(200, storedMessage);
-    });
+    }).catch(utils.handleError(req, res, 500, "Error while trying to write message to database."));
   });
 
 // get messaes for a specific event
 messagesRouter.route('/:eid')
   .get(utils.checkUser, function(req, res){
+    if (req.params.eid )
     var query = "SELECT users.username, event_messages.message " + 
                 "FROM event_messages, users " +
                 "WHERE (event_messages.eid = " + req.params.eid + " AND event_messages.uid = users.id)";
@@ -50,7 +53,7 @@ messagesRouter.route('/:eid')
       if (messages) {
         res.send(200, messages);
       }
-    });
+    }).catch(utils.handleError(req, res, 500, "Error while trying to read messages from database."));
   });
 
 
