@@ -25,6 +25,7 @@ var env = config.development;
 ////////////////////
 
 // "/"
+var rootRouter = require('./routes/router_root');
 // "/signup"
 var signupRouter = require('./routes/router_signup');
 // "/login"
@@ -62,6 +63,7 @@ app.use(session({
 app.use('/login', loginRouter);
 app.use('/signup', signupRouter);
 require('./routes/routes.js')(app);
+app.use('/', rootRouter);
 
 app.listen(port);
 

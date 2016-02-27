@@ -29,10 +29,10 @@ module.exports = function(app){
   /////////////////////////
   // root route handling //
   /////////////////////////
-  app.route('/')
-    .get(utils.checkUser, function(req, res) {
-      res.sendfile(path.resolve('client/first.html')); 
-  });
+  // app.route('/')
+  //   .get(utils.checkUser, function(req, res) {
+  //     res.sendfile(path.resolve('client/first.html')); 
+  // });
 
 
   ////////////////////////////
@@ -194,12 +194,12 @@ module.exports = function(app){
     /////////////////////////////
     // wildcard route handling //
     /////////////////////////////
-    app.route('/*')
-      .get(function(req, res){
-        console.log('defaulting to wildcard route.');
-        console.log('req.params: ', req.params);
-        res.redirect('/');
-      });
+    // app.route('/*')
+    //   .get(function(req, res){
+    //     console.log('defaulting to wildcard route.');
+    //     console.log('req.params: ', req.params);
+    //     res.redirect('/');
+    //   });
 
 };
 
