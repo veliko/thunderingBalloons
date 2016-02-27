@@ -23,9 +23,14 @@ var placesRouter = express.Router();
       var lat = req.query.lat;
       var lon = req.query.lng;
 
-      searchYelp(term, lat, lon, function(data){
-        res.json(data);
-      });
+      try {
+        searchYelp(term, lat, lon, function(data){
+          res.json(data);
+        });
+      } 
+      catch(err) {
+        res.send(500, []);        
+      }
     });
 
 

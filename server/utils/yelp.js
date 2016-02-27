@@ -21,15 +21,13 @@ var yelp = new Yelp({
 var searchYelp = function( keyword, latitude, longitude, callback ) {
 
   yelp.search({ term: keyword, ll: latitude+','+ longitude})
-  .then(function (data) {
-    //console.log(data);
-    if(callback){
-      callback(data);
-    }
-  })
-  .catch(function (err) {
-    console.error('search Yelp Error: ', err);
-  });
+    .then(function (data) {
+      if(callback){
+        callback(data);
+      }
+    }).catch(function (err) {
+      console.error('Search Yelp Error: ', err);
+    });
  
 }
 

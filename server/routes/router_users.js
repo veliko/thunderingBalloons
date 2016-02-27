@@ -33,7 +33,7 @@ var User = require('../db/models/user');
        attributes: ["id", "username", "latitude", "longitude"]
      }).then(function(allUsers){
        res.send(200, allUsers);
-     });
+     }).catch(utils.handleError(req, res, 500, "Unale to retrieve users from database"));
    });
 
 

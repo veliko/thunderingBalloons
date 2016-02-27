@@ -50,8 +50,8 @@ loginRouter.route('/')
             }
           });
         }
-      });
-    });
+      }).catch(utils.handleError(req, res, 500, "Error while trying to find user in database."));
+    }).catch(utils.handleError(req, res, 500, "Error while trying to sync with database."));
   });
 
 
