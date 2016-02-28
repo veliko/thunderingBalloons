@@ -54,9 +54,6 @@ eventsRouter.route('/')
     invitees.unshift(req.session.uid);
 
     // write all event info into events table
-<<<<<<< 5c2bb7a16991145492d11a2123d6828382934fb4
-=======
->>>>>>> include the full reach to help troubleshoot
     sequelize.sync().then(function(){
       return Event.create({
         event_name: req.body.event_info.event_name,
@@ -75,10 +72,8 @@ eventsRouter.route('/')
         yelp_link: req.body.event_info.yelp_link,
         createdAt: Date.now()
       }).then(function(result) {
-<<<<<<< 5c2bb7a16991145492d11a2123d6828382934fb4
         // write all invitee info into invitee table
         invitees.forEach(function(invitee, index){
->>>>>>> include the full reach to help troubleshoot
           Invitee.create({
             uid: invitee,
             eid: result.id,
@@ -86,16 +81,13 @@ eventsRouter.route('/')
             createdAt: Date.now()
           })
           .then(function() {
-<<<<<<< 5c2bb7a16991145492d11a2123d6828382934fb4
             if (index === invitees.length-1) {
               res.send(200, "wrote all invitees to db");
->>>>>>> include the full reach to help troubleshoot
             }
           }).catch(utils.handleError(req, res, 500, "Error writing invitee information to database"));
         });
       }).catch(utils.handleError(req, res, 500, "Error writing event information to database."));
     }).catch(utils.handleError(req, res, 500, "Error writing event to database."));
   });
-
 
 module.exports = eventsRouter;
