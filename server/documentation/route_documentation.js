@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 //                                                      // 
-//   api routes listing for thunderingballoons server   //
+//   API routes listing for thunderingballoons server   //
 //                                                      // 
 //////////////////////////////////////////////////////////
 
@@ -126,7 +126,7 @@
       "uid": 1, // user id of current user
       "eid": 1, // this is also the event id
       "current_status": "pending",
-      "createdAt": "2016-02-24T00:00:00.000Z",
+      "createdAt": "2016-02-24T00:00:00.000Z", 
       "updatedAt": "2016-02-24T00:00:00.000Z",
       "event_name": "Business coffee meeting",
       "org_id": 2, // if of the event organizer
@@ -135,7 +135,10 @@
       "street": "123 Main St",
       "city": "Sausalito",
       "state": "CA",
-      "event_time": "2016-02-28T02:00:00.000Z",
+      
+      "event_time": "2016-01-24T07:23:00.000Z", 
+      // IMPORTANT: Please, see date entry clarification for "POST /events" route below."
+      
       "latitude": 37.7832,
       "longitude": -122.4082,
       "phone": "650-238-8267",
@@ -165,7 +168,25 @@
         "street" : "123 Main St",
         "city" : "Sausalito",
         "state" : "CA",
-        "event_time" : "2016-02-27",
+        
+        "event_time" : "2016-01-23 23:23:00 PST",
+        /////////////////////////////////////////////////////////////////////////////////
+        //                                                                             // 
+        //   DATE ENTRY CLARIFICATION                                                  //
+        //   The required datetime format is "yyyy-mm-dd hh:mm:ss PST", where PST      //
+        //   Is the client timezone. Example:"2016-01-23 23:23:00 PST"                 //
+        //                                                                             //
+        //   ATTENTION: this will be converted to UTC time when stored on the server   //
+        //   The server stored entry will look like this: "2016-01-24T07:23:00.000Z"   //
+        //   That UTC datetime string is what the server will return back              //
+        //   To convert the UTC datetime string back to the client time zone           //  
+        //   Run the following command in the client-side code:                        // 
+        //   new Date("2016-01-24T07:23:00.000Z")                                      //
+        //                                                                             //
+        //   RESULT: "Sat Jan 23 2016 23:23:00 GMT-0800 (PST)"                         //
+        //                                                                             //
+        /////////////////////////////////////////////////////////////////////////////////
+
         "latitude" : 37.7832,
         "longitude" : -122.4082,
         "phone" : "650-238-8267",
