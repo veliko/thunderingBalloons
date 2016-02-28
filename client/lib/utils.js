@@ -34,9 +34,8 @@ var postEvent = function (places, users) {
 
   var timestamp = new Date(date+' '+ time);
 
-  console.log('timestamp', timestamp);
-
-  $('#addresses :checked').each(function(index) {
+  $('input[name="usersAddresses"]:checked').each(function() {
+    var index = $(this).attr("value");
     invitees.push(users[index].id) ;
   });
   
@@ -71,8 +70,6 @@ var getUsers = function (callback) {
 
   $.get('http://localhost:8080/users')
       .done(function (data){
-        console.log('inside users:', data);
-      console.log('typeof users:', Array.isArray(data) );
        callback({users: data});
     }).fail(function (error){
       console.error('Failed to receive users!', error);

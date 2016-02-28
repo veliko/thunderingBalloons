@@ -47,7 +47,6 @@ class App extends React.Component {
       this.setState({eventsList : data.eventsList});
     }
     if(data.users) {
-      console.log('inside users:', data.users);
       //console.log('typeof users:', typeof this.state.users);
       this.setState({users : data.users});
     }

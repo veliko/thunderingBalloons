@@ -1,7 +1,7 @@
 var AddressList = ({users}) => (
-  <div id="addresses" >
+  <div>
   {users.map((user, index) => 
-    <AddressListEntry user={user} key={index} />
+    <AddressListEntry user={user} index={index} key={user.id} />
     )}
   </div>
 );

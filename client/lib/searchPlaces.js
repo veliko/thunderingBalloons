@@ -5,11 +5,14 @@ var searchPlaces = function (callback, users) {
   var longitude = 0;
   var count = 0;
 
-  $('#addresses :checked').each(function(index) {
+  $('input[name="usersAddresses"]:checked').each(function() {
+    var index =  $(this).attr("value");
     latitude += users[index].latitude;
     longitude += users[index].longitude;
     count++;
   });
+
+  console.log('latitude:', latitude, 'longitude:', longitude, 'count:', count);
 
   var query = {lat:latitude/count, lng:longitude/count, term:term};
   $.get('/places', query)
