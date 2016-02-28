@@ -3,23 +3,25 @@ class App extends React.Component {
     super(props);
     this.state = {
       placesList: [],
-      addressesList: [],
+      //addressesList: [],
       eventsList: [],
+      users: [],
       currentPage: '/login'
     };
+    getUsers(this.setStates.bind(this));
   }
 
-  removeAddress (address, event){
-    event.preventDefault();
-    var addressesList = this.state.addressesList.filter(function(adrs){
-      return address!== adrs;
-    });
-    this.setStates({addressesList: addressesList});
-  }
+  // removeAddress (address, event){
+  //   event.preventDefault();
+  //   var addressesList = this.state.addressesList.filter(function(adrs){
+  //     return address!== adrs;
+  //   });
+  //   this.setStates({addressesList: addressesList});
+  // }
 
-  ListAllEvents(events){
+  // ListAllEvents(events){
 
-  }
+  // }
 
   setCurrentPage (currentPage, event) {
   if(event) {
@@ -43,6 +45,11 @@ class App extends React.Component {
     if(data.eventsList) {
       //console.log('inside eventsList:', Array.isArray(data.eventsList));
       this.setState({eventsList : data.eventsList});
+    }
+    if(data.users) {
+      console.log('inside users:', data.users);
+      //console.log('typeof users:', typeof this.state.users);
+      this.setState({users : data.users});
     }
   }
 
@@ -69,8 +76,7 @@ class App extends React.Component {
             <div><a href='/logout'>Log Out</a></div>
           </div>
           <div>
-            <Search addresses = {this.state.addressesList} setStates = {this.setStates.bind(this)}/>
-            <AddressList addresses = {this.state.addressesList} onRemove = {this.removeAddress.bind(this)}/>
+            <Search users = {this.state.users} setStates = {this.setStates.bind(this)} places = {this.state.placesList} />
             <PlaceList places = {this.state.placesList} />
           </div>
         </div>

@@ -49,7 +49,14 @@ eventsRouter.route('/')
     }).catch(utils.handleError(req, res, 500, "Error while reading events from database."));
   }) 
   .post(utils.checkUser, function(req, res) {
+    //add user ID to the begining of the invitee array
+    var invitees = req.body.invitees;
+    invitees.unshift(req.session.uid);
+
     // write all event info into events table
+<<<<<<< 5c2bb7a16991145492d11a2123d6828382934fb4
+=======
+>>>>>>> include the full reach to help troubleshoot
     sequelize.sync().then(function(){
       return Event.create({
         event_name: req.body.event_info.event_name,
@@ -68,8 +75,10 @@ eventsRouter.route('/')
         yelp_link: req.body.event_info.yelp_link,
         createdAt: Date.now()
       }).then(function(result) {
+<<<<<<< 5c2bb7a16991145492d11a2123d6828382934fb4
         // write all invitee info into invitee table
-        req.body.invitees.forEach(function(invitee, index){
+        invitees.forEach(function(invitee, index){
+>>>>>>> include the full reach to help troubleshoot
           Invitee.create({
             uid: invitee,
             eid: result.id,
@@ -77,8 +86,10 @@ eventsRouter.route('/')
             createdAt: Date.now()
           })
           .then(function() {
-            if (index === req.body.invitees.length-1) {
-              res.send(200, "Event created, wrote all invitees to database");
+<<<<<<< 5c2bb7a16991145492d11a2123d6828382934fb4
+            if (index === invitees.length-1) {
+              res.send(200, "wrote all invitees to db");
+>>>>>>> include the full reach to help troubleshoot
             }
           }).catch(utils.handleError(req, res, 500, "Error writing invitee information to database"));
         });

@@ -1,15 +1,22 @@
-var searchPlaces = function (options, callback) {
+var searchPlaces = function (callback, users) {
   var term = $('#term').val();
-  var address = $('#address').val();
+  
+  var latitude = 0;
+  var longitude = 0;
+  var count = 0;
 
-  codeAddress(address, function(lat, lng){
-    var query = {lat:lat, lng:lng, term:term};
-    $.get('/places', query)
-      .done(function (data){
-        console.log('successfully YELP get', data);
-        callback({placesList: data.businesses});
-    }).fail(function (error){
-      console.error('Yelp: Failed to receive places!', error);
-    });
+  $('#addresses :checked').each(function(index) {
+    latitude += users[index].latitude;
+    longitude += users[index].longitude;
+    count++;
+  });
+
+  var query = {lat:latitude/count, lng:longitude/count, term:term};
+  $.get('/places', query)
+    .done(function (data){
+      console.log('successfully YELP get', data);
+      callback({placesList: data.businesses});
+  }).fail(function (error){
+    console.error('Yelp: Failed to receive places!', error);
   });
 };

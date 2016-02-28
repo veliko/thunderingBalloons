@@ -1,4 +1,4 @@
-var PlaceListEntry = ({place}) => (
+var PlaceListEntry = ({place, index}) => (
   
   <div>
     <div>
@@ -7,6 +7,8 @@ var PlaceListEntry = ({place}) => (
     <div>
       <div>Name: {place.name}</div>
       <div>Rating: {place.rating}</div>
+	  
+      <input type="radio" name="chosenPlace" value={index} />
     </div>
   </div>
 );

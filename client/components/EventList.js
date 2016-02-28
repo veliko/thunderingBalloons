@@ -2,7 +2,7 @@ var EventList = ({events}) => (
 
   <div>
   {events.map((ev) => 
-    <EventListEntry ev={ev} key={ev.id} />
+    <EventListEntry ev={ev} key={ev.name} />
     )}
   </div>
 );

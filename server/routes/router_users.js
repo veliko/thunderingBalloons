@@ -30,10 +30,15 @@ var User = require('../db/models/user');
   usersRouter.route('/')
    .get(utils.checkUser, function(req, res) {
      User.findAll({
-       attributes: ["id", "username", "latitude", "longitude"]
+       attributes: ["id", "username", "latitude", "longitude"],
+       where: {
+         id: {
+          $ne: req.session.uid 
+         }
+       },
      }).then(function(allUsers){
        res.send(200, allUsers);
-     }).catch(utils.handleError(req, res, 500, "Unale to retrieve users from database"));
+     }).catch(utils.handleError(req, res, 500, "Unable to retrieve users from database"));
    });
 
 
