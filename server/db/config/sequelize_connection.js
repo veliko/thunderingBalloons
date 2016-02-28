@@ -1,3 +1,8 @@
+///////////////////////////////////////////////
+// sequelize connection po postgres database //
+///////////////////////////////////////////////
+
+
 var config = require('./config');
 var env = config.development;
 var Sequelize = require('sequelize');
@@ -5,5 +10,6 @@ var conString = env.dialect+'://'+env.username+':'+env.password+'@'+env.host+':'
 var sequelize = new Sequelize(conString, {
   dialect: 'postgres',
 });
+
 
 module.exports = sequelize;
