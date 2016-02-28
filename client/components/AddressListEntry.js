@@ -1,7 +1,7 @@
-var AddressListEntry = ({address, onRemove}) => (
+var AddressListEntry = ({user, index}) => (
   
   <div>
-    <div>{address} <a href data-id={address.id} onClick={onRemove.bind(this, address)}>remove</a> </div>
+    <input type="checkbox" value={index} name="usersAddresses"/> {user.username} <br/>
   </div>
 );
 

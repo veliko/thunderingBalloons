@@ -1,7 +1,7 @@
-var AddressList = ({addresses, onRemove}) => (
+var AddressList = ({users}) => (
   <div>
-  {addresses.map((address) => 
-    <AddressListEntry address={address} key={address.id} onRemove = {onRemove.bind(this)}/>
+  {users.map((user, index) => 
+    <AddressListEntry user={user} index={index} key={user.id} />
     )}
   </div>
 );
