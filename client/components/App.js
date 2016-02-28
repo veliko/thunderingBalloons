@@ -11,18 +11,6 @@ class App extends React.Component {
     getUsers(this.setStates.bind(this));
   }
 
-  // removeAddress (address, event){
-  //   event.preventDefault();
-  //   var addressesList = this.state.addressesList.filter(function(adrs){
-  //     return address!== adrs;
-  //   });
-  //   this.setStates({addressesList: addressesList});
-  // }
-
-  // ListAllEvents(events){
-
-  // }
-
   setCurrentPage (currentPage, event) {
   if(event) {
     event.preventDefault();
