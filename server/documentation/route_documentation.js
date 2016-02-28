@@ -209,11 +209,13 @@
     "response data": [
         {
           "username": "arnold",
-          "message": "I love coffee"
+          "message": "I love coffee",
+          "createdAt": "2016-02-28T00:00:00.000Z"
         },
         {
           "username": "john",
-          "message": "Give me CSS"
+          "message": "Give me CSS",
+          "createdAt": "2016-02-28T00:00:00.000Z"
         }
       ]
   },

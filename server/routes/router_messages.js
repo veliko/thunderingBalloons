@@ -38,7 +38,7 @@ messagesRouter.route('/')
 messagesRouter.route('/:eid')
   .get(utils.checkUser, function(req, res){
     if (req.params.eid )
-    var query = "SELECT users.username, event_messages.message " + 
+    var query = "SELECT users.username, event_messages.message, event_messages.\"createdAt\" " + 
                 "FROM event_messages, users " +
                 "WHERE (event_messages.eid = " + req.params.eid + " AND event_messages.uid = users.id)";
     sequelize.query(query).spread(function(messages, metadata){
