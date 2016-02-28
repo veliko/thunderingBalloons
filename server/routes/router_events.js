@@ -50,11 +50,10 @@ eventsRouter.route('/')
   }) 
   .post(utils.checkUser, function(req, res) {
     // write all event info into events table
-    console.log('in post events route :');
     sequelize.sync().then(function(){
       return Event.create({
         event_name: req.body.event_info.event_name,
-        org_id: req.body.event_info.org_id,
+        org_id: req.session.uid,
         venue_name: req.body.event_info.venue_name,
         street: req.body.event_info.street,
         city: req.body.event_info.city,
@@ -69,7 +68,7 @@ eventsRouter.route('/')
         yelp_link: req.body.event_info.yelp_link,
         createdAt: Date.now()
       }).then(function(result) {
-        // write all invitee info in to invitee table
+        // write all invitee info into invitee table
         req.body.invitees.forEach(function(invitee, index){
           Invitee.create({
             uid: invitee,
@@ -79,7 +78,7 @@ eventsRouter.route('/')
           })
           .then(function() {
             if (index === req.body.invitees.length-1) {
-              res.send(200, "wrote all invitees to db");
+              res.send(200, "Event created, wrote all invitees to database");
             }
           }).catch(utils.handleError(req, res, 500, "Error writing invitee information to database"));
         });

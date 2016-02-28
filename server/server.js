@@ -34,7 +34,7 @@ var loginRouter = require('./routes/router_login');
 // "/users"
 var usersRouter = require('./routes/router_users');
 // "/invite"
-var inviteRouter = require('./routes/router_invite')
+var inviteRouter = require('./routes/router_invite');
 // "/events"
 var eventsRouter = require('./routes/router_events');
 // "/messages"
