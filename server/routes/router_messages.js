@@ -10,15 +10,7 @@ var express = require('express');
 var messagesRouter = express.Router();
 
 // db helpers
-var config = require('../db/config/config');
-var env = config.development;
-var Sequelize = require('sequelize');
-var conString = env.dialect+'://'+env.username+':'+env.password+'@'+env.host+':'+env.port+'/'+env.database;
-var sequelize = new Sequelize(conString, {
-  dialect: 'postgres',
-});
-
-//db models
+var sequelize = require('../db/config/sequelize_connection');
 var Message = require('../db/models/message');
 
 
@@ -46,7 +38,7 @@ messagesRouter.route('/')
 messagesRouter.route('/:eid')
   .get(utils.checkUser, function(req, res){
     if (req.params.eid )
-    var query = "SELECT users.username, event_messages.message " + 
+    var query = "SELECT users.username, event_messages.message, event_messages.\"createdAt\" " + 
                 "FROM event_messages, users " +
                 "WHERE (event_messages.eid = " + req.params.eid + " AND event_messages.uid = users.id)";
     sequelize.query(query).spread(function(messages, metadata){
