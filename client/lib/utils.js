@@ -8,7 +8,6 @@ var logout = function () {
 }
 
 var getEvents = function (callback) {
-  //console.log('callback', callback);
 
   $.get('http://localhost:8080/events')
       .done(function (data){

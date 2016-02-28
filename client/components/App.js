@@ -3,7 +3,6 @@ class App extends React.Component {
     super(props);
     this.state = {
       placesList: [],
-      //addressesList: [],
       eventsList: [],
       users: [],
       currentPage: '/login'
@@ -31,7 +30,7 @@ class App extends React.Component {
       this.setState({currentPage : data.currentPage});
     }
     if(data.eventsList) {
-      //console.log('inside eventsList:', Array.isArray(data.eventsList));
+      console.log('inside eventsList:', data.eventsList);
       this.setState({eventsList : data.eventsList});
     }
     if(data.users) {
