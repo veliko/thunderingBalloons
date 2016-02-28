@@ -7,10 +7,10 @@ class Search extends React.Component {
   render() {
     return (
       <div>
-        <h4>What? <input class='text' id='term' type='text' name='term' placeholder='what you want to do...' required/></h4>
+        <h4>What? <input id='term' type='text' name='term' placeholder='what you want to do...' required/></h4>
         <h4>When?
-          <input class='text' id='date' type='text' name='date' placeholder='date...' required/>
-          <input class='text' id='time' type='text' name='time' placeholder='time...' required/>
+          <input id='date' type='text' name='date' placeholder='date...' required/>
+          <input id='time' type='text' name='time' placeholder='time...' required/>
         </h4>
         <h4>Who?</h4>
         <AddressList users = {this.props.users}/>

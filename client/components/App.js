@@ -3,25 +3,12 @@ class App extends React.Component {
     super(props);
     this.state = {
       placesList: [],
-      //addressesList: [],
       eventsList: [],
       users: [],
       currentPage: '/login'
     };
     getUsers(this.setStates.bind(this));
   }
-
-  // removeAddress (address, event){
-  //   event.preventDefault();
-  //   var addressesList = this.state.addressesList.filter(function(adrs){
-  //     return address!== adrs;
-  //   });
-  //   this.setStates({addressesList: addressesList});
-  // }
-
-  // ListAllEvents(events){
-
-  // }
 
   setCurrentPage (currentPage, event) {
   if(event) {
@@ -39,15 +26,12 @@ class App extends React.Component {
       this.setState({addressesList : data.addressesList});
     }
     if(data.currentPage) {
-      //console.log('inside currentPage:', data.currentPage);
       this.setState({currentPage : data.currentPage});
     }
     if(data.eventsList) {
-      //console.log('inside eventsList:', Array.isArray(data.eventsList));
       this.setState({eventsList : data.eventsList});
     }
     if(data.users) {
-      //console.log('typeof users:', typeof this.state.users);
       this.setState({users : data.users});
     }
   }
