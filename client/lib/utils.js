@@ -1,5 +1,5 @@
 var logout = function () {
-  $.get('http://localhost:8080/logout')
+  $.get('/logout')
       .done(function (data){
        console.log('successfully logged out');
     }).fail(function (error){
@@ -9,7 +9,7 @@ var logout = function () {
 
 var getEvents = function (callback) {
 
-  $.get('http://localhost:8080/events')
+  $.get('/events')
       .done(function (data){
        callback({eventsList: data, currentPage: '/myEvents'});
     }).fail(function (error){
@@ -56,7 +56,7 @@ var postEvent = function (places, users) {
     },
     invitees: invitees
   }
-  $.post('http://localhost:8080/events', query)
+  $.post('/events', query)
     .done(function (data) {
       console.log('successfully created event.', data);
   }).fail(function (error){
@@ -67,7 +67,7 @@ var postEvent = function (places, users) {
 
 var getUsers = function (callback) {
 
-  $.get('http://localhost:8080/users')
+  $.get('/users')
       .done(function (data){
        callback({users: data});
     }).fail(function (error){
@@ -75,3 +75,40 @@ var getUsers = function (callback) {
     });
 }
 
+// given an address return latitude and longitude
+function codeAddress(address, callback) {
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode( { 'address': address}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+     var lat = results[0].geometry.location.lat();
+     var lng = results[0].geometry.location.lng();
+     callback(lat, lng);
+    } else {
+      alert("Geocode was not successful for the following reason: " + status);
+    }
+  });
+}
+
+var searchPlaces = function (callback, users) {
+  var term = $('#term').val();
+  var latitude = 0;
+  var longitude = 0;
+  var count = 0;
+
+  $('input[name="usersAddresses"]:checked').each(function() {
+    var index =  $(this).attr("value");
+    latitude += users[index].latitude;
+    longitude += users[index].longitude;
+    count++;
+  });
+
+  var query = {lat:latitude/count, lng:longitude/count, term:term};
+
+  $.get('/places', query)
+    .done(function (data){
+      console.log('successfully YELP get', data);
+      callback({placesList: data.businesses});
+  }).fail(function (error){
+    console.error('Yelp: Failed to receive places!', error);
+  });
+};
