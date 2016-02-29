@@ -17,9 +17,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var methodOverride = require('method-override');
-var path = require('path');
-var httpProxy = require('http-proxy');
-var proxy = httpProxy.createProxyServer();
+// var path = require('path');
+// var httpProxy = require('http-proxy');
+// var proxy = httpProxy.createProxyServer();
 
 
 ////////////////////
@@ -80,24 +80,25 @@ app.use('/places', placesRouter);
 app.use('/invite', inviteRouter);
 app.use('/', rootRouter);
  
-var bundle = require('./bundle.js');
-  bundle();
+// var bundle = require('./bundle.js');
+//   bundle();
 
-  // Any requests to localhost:3000/build is proxied
-  // to webpack-dev-server
-  app.all('/build/*', function (req, res) {
-    proxy.web(req, res, {
-        target: 'http://localhost:8080'
-    });
-  });
-  proxy.on('error', function(e) {
-  console.log('Could not connect to proxy, please try again...');
-});
+//   // Any requests to localhost:3000/build is proxied
+//   // to webpack-dev-server
+//   app.all('/build/*', function (req, res) {
+//     proxy.web(req, res, {
+//         target: 'http://localhost:8080'
+//     });
+//   });
+//   proxy.on('error', function(e) {
+//   console.log('Could not connect to proxy, please try again...');
+// });
 
-app.listen(port, function () {
-  console.log('Server running on port ' + port);
-});
-// app.listen(port);
+// app.listen(port, function () {
+//   console.log('Server running on port ' + port);
+// });
+
+app.listen(port);
 
 console.log("App started on port:",port);
 exports = module.exports = app;
