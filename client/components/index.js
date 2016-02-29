@@ -1,10 +1,3 @@
-import SimpleMap from './SimpleMap';
-import Search from './Search'; 
-import PlaceList from './PlaceList'; 
-import EventList from './EventList';
-import React from 'react';
-import ReactDOM from 'react-dom';
-
 
 class App extends React.Component {
   constructor(props) {
@@ -68,7 +61,6 @@ class App extends React.Component {
           </div>
           <div>
             <Search users = {this.state.users} setStates = {this.setStates.bind(this)} places = {this.state.placesList} />
-            <SimpleMap places = {this.state.placesList} />
             <PlaceList places = {this.state.placesList} />
           </div>
         </div>

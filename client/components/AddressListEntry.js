@@ -1,3 +1,5 @@
+import React from 'react';
+
 var AddressListEntry = ({user, index}) => (
   
   <div>
@@ -5,4 +7,4 @@ var AddressListEntry = ({user, index}) => (
   </div>
 );
 
-window.AddressListEntry = AddressListEntry;
+export default AddressListEntry;

@@ -1,3 +1,6 @@
+import AddressList from './AddressList'; 
+import React from 'react';
+
 class Search extends React.Component {
 
   constructor(props) {
@@ -21,4 +24,4 @@ class Search extends React.Component {
   )}
 };
 
-window.Search = Search;
+export default Search;
