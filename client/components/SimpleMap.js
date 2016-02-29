@@ -13,18 +13,6 @@ class SimpleMap extends React.Component {
     });
   }
 
-  onDragEnd(e) {
-    console.log('onDragEnd', e);
-  }
-
-  onCloseClick() {
-    console.log('onCloseClick');
-  }
-
-  onClick(e) {
-    console.log('onClick', e);
-  }
-
   render() {
     var lat =37 , long = -122;
     if(this.props.places.length){
@@ -34,7 +22,7 @@ class SimpleMap extends React.Component {
 
       for(var i = 0 ; i < this.props.places.length ; i++) {
         midLat += this.props.places[i].location.coordinate.latitude;
-        midLng += this.props.places[i].location.coordinate.longitude;
+        midLng += this.props.places[i].location.coordinate.longitude
 
         coordinates.push(
           {
@@ -54,8 +42,8 @@ class SimpleMap extends React.Component {
           <Gmaps
             width={'400px'}
             height={'400px'}
-            lat={midLat}
-            lng={midLng}
+            lat={lat}
+            lng={long}
             zoom={12}
             loadingMessage={'Be happy'}
             params={{v: '3.exp'}}
