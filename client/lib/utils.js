@@ -1,5 +1,5 @@
 var logout = function () {
-  $.get('http://localhost:8080/logout')
+  $.get('/logout')
       .done(function (data){
        console.log('successfully logged out');
     }).fail(function (error){
@@ -9,7 +9,7 @@ var logout = function () {
 
 var getEvents = function (callback) {
 
-  $.get('http://localhost:8080/events')
+  $.get('/events')
       .done(function (data){
        callback({eventsList: data, currentPage: '/myEvents'});
     }).fail(function (error){
@@ -56,7 +56,7 @@ var postEvent = function (places, users) {
     },
     invitees: invitees
   }
-  $.post('http://localhost:8080/events', query)
+  $.post('/events', query)
     .done(function (data) {
       console.log('successfully created event.', data);
   }).fail(function (error){
@@ -67,7 +67,7 @@ var postEvent = function (places, users) {
 
 var getUsers = function (callback) {
 
-  $.get('http://localhost:8080/users')
+  $.get('/users')
       .done(function (data){
        callback({users: data});
     }).fail(function (error){
@@ -103,7 +103,7 @@ var searchPlaces = function (callback, users) {
   });
 
   var query = {lat:latitude/count, lng:longitude/count, term:term};
-  
+
   $.get('/places', query)
     .done(function (data){
       console.log('successfully YELP get', data);
