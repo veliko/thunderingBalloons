@@ -1,4 +1,4 @@
-import {Gmaps, Marker, InfoWindow, Circle} from 'react-gmaps';
+import {Gmaps, Marker, InfoWindow} from 'react-gmaps';
 import React from 'react';
 
 class SimpleMap extends React.Component {
@@ -35,8 +35,6 @@ class SimpleMap extends React.Component {
 
       midLat = midLat/coordinates.length;
       midLng = midLng/coordinates.length;
-
-      console.log('coordinates:', coordinates);
 
       return (
         <div>
