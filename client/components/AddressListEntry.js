@@ -1,6 +1,6 @@
 var AddressListEntry = ({user, index}) => (
   
-  <div>
+  <div className='col-md-4'>
     <input type="checkbox" value={index} name="usersAddresses"/> {user.username} <br/>
   </div>
 );

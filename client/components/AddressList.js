@@ -1,7 +1,7 @@
 var AddressList = ({users}) => (
-  <div>
+  <div className='col-md-12'>
   {users.map((user, index) => 
-    <AddressListEntry user={user} index={index} key={user.id} />
+    <AddressListEntry className='col-md-3' user={user} index={index} key={user.id} />
     )}
   </div>
 );

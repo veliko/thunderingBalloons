@@ -11,18 +11,29 @@
   <script src="lib/jquery.min.js"></script>
   <script src="lib/react.js"></script>
   <script src="lib/react-dom.js"></script>
-  <!-- Materialize Files -->
+  <link href="lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+  <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
 </head>
 <body>
   <!-- Title -->
-  <section>
-  	<h1>Welcome to Meet Me!</h1>
-  </section>
+  <div class="container">
+    <div class="row">
+      <section class="col-md-12">
+        <h1>Meet Me!</h1>
+      </section>
+    </div>
+
+    <div id="app"></div>
+    
+    <!-- Footer Bar -->
+    <div class="row">
+      <section class =col-md-12>
+        <h3>@copyright footer</h3>
+      </section>
+    </div>
   
-  <div id="app"></div>
-  <!-- Footer Bar -->
-  <section>
-  </section>
+  </div>
+
   <script type="text/babel" src="components/Search.js"></script>
   <script type="text/babel" src="components/AttendeeListEntry.js"></script>
   <script type="text/babel" src="components/EventListEntry.js"></script>
