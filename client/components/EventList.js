@@ -1,4 +1,5 @@
 import EventListEntry from './EventListEntry'; 
+import React from 'react';
  
 var EventList = ({events}) => (
 
