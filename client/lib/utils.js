@@ -75,3 +75,40 @@ var getUsers = function (callback) {
     });
 }
 
+// given an address return latitude and longitude
+function codeAddress(address, callback) {
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode( { 'address': address}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+     var lat = results[0].geometry.location.lat();
+     var lng = results[0].geometry.location.lng();
+     callback(lat, lng);
+    } else {
+      alert("Geocode was not successful for the following reason: " + status);
+    }
+  });
+}
+
+var searchPlaces = function (callback, users) {
+  var term = $('#term').val();
+  var latitude = 0;
+  var longitude = 0;
+  var count = 0;
+
+  $('input[name="usersAddresses"]:checked').each(function() {
+    var index =  $(this).attr("value");
+    latitude += users[index].latitude;
+    longitude += users[index].longitude;
+    count++;
+  });
+
+  var query = {lat:latitude/count, lng:longitude/count, term:term};
+  
+  $.get('/places', query)
+    .done(function (data){
+      console.log('successfully YELP get', data);
+      callback({placesList: data.businesses});
+  }).fail(function (error){
+    console.error('Yelp: Failed to receive places!', error);
+  });
+};
