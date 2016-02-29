@@ -1,6 +1,6 @@
 {
   "name": "ThunderingBalloons",
-  "main": "server.js",
+  "main": "client/components/App.js",
   "dependencies": {
     "bcrypt": "^0.8.5",
     "body-parser": "~1.4.2",

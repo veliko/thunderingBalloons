@@ -18,6 +18,7 @@ var rootRouter = express.Router();
 // main root route
 rootRouter.route('/')
   .get(utils.checkUser, function(req, res) {
+    console.log('/ route req body', req.body);
     res.sendfile(path.resolve('client/first.html')); 
   });
 
