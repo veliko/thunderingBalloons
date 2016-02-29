@@ -4,4 +4,4 @@ var AttendeeListEntry = ({attendee}) => (
   </div>
 );
 
-window.AttendeeListEntry = AttendeeListEntry;
+export default AttendeeListEntry;

@@ -1,3 +1,5 @@
+import EventListEntry from './EventListEntry'; 
+ 
 var EventList = ({events}) => (
 
   <div>
@@ -7,4 +9,4 @@ var EventList = ({events}) => (
   </div>
 );
 
-window.EventList = EventList;
+export default EventList;

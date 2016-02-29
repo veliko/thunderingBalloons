@@ -1,3 +1,6 @@
+import AddressListEntry from './AddressListEntry'; 
+import React from 'react';
+
 var AddressList = ({users}) => (
   <div>
   {users.map((user, index) => 
@@ -6,4 +9,4 @@ var AddressList = ({users}) => (
   </div>
 );
 
-window.AddressList = AddressList;
+export default AddressList;

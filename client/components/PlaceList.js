@@ -1,3 +1,6 @@
+import PlaceListEntry from './PlaceListEntry'; 
+import React from 'react';
+
 var PlaceList = ({places}) => (
 
   <div>
@@ -7,4 +10,4 @@ var PlaceList = ({places}) => (
   </div>
 );
 
-window.PlaceList = PlaceList;
+export default PlaceList;

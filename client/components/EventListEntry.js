@@ -1,3 +1,6 @@
+import AttendeeListEntry from './AttendeeListEntry'; 
+import React from 'react';
+
 var EventListEntry = ({ev}) => (
   <div>
     <div>Event Name: {ev.event_name}</div>
@@ -7,4 +10,4 @@ var EventListEntry = ({ev}) => (
   </div>
 );
 
-window.EventListEntry = EventListEntry;
+export default EventListEntry;

@@ -1,3 +1,5 @@
+import React from 'react';
+
 var PlaceListEntry = ({place, index}) => (
   
   <div>
@@ -13,4 +15,4 @@ var PlaceListEntry = ({place, index}) => (
   </div>
 );
 
-window.PlaceListEntry = PlaceListEntry;
+export default PlaceListEntry;
