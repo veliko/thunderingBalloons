@@ -46,35 +46,37 @@ class App extends React.Component {
   render() {
       if(this.state.currentPage === '/myEvents'){
         return (
-        <div>
-          <div id='nav'>
-            <div onClick={() => getEvents(this.setStates.bind(this))}> My Events </div>
-            <div onClick={() => addEvents(this.setStates.bind(this))}> Add Events </div>
-            <div><a href='/logout'>Log Out</a></div>
-          </div>
           <div>
-            <EventList events = {this.state.eventsList}/>
+            <ul className='nav nav-justified nav-pills'>
+              <li role="navigation" className="active" onClick={() => addEvents(this.setStates.bind(this))}><a>Add Events</a></li>
+              <li role="navigation" onClick={() => getEvents(this.setStates.bind(this))}><a>My Events</a></li>
+              <li role="navigation" ><a href='/logout'>Log Out</a></li>
+            </ul>
+            <div className='row'>
+              <EventList events = {this.state.eventsList}/>
+            </div>
           </div>
-        </div>
-        )
-      }else{
+          )
+      } else {
         return (
-        <div>
-          <div id='nav'>
-            <div onClick={() => getEvents(this.setStates.bind(this))}> My Events</div>
-            <div onClick={() => addEvents()}>Add Events</div>
-            <div><a href='/logout'>Log Out</a></div>
-          </div>
           <div>
-            <Search users = {this.state.users} setStates = {this.setStates.bind(this)} places = {this.state.placesList} />
-            <SimpleMap places = {this.state.placesList} />
-            <PlaceList places = {this.state.placesList} />
+            <ul className='nav nav-justified nav-pills'>
+              <li role="navigation" className="active" onClick={() => addEvents()}><a>Add Events</a></li>
+              <li role="navigation" onClick={() => getEvents(this.setStates.bind(this))}><a>My Events</a></li>
+              <li role="navigation" ><a href='/logout'>Log Out</a></li>
+            </ul>
+            <div className="row">
+              <div className="col-md-6">
+                <Search users = {this.state.users} setStates = {this.setStates.bind(this)} places = {this.state.placesList} />
+                <PlaceList places = {this.state.placesList} />
+              </div>
+              <div className="col-md-6">
+                <SimpleMap places = {this.state.placesList} />
+              </div>
+            </div>
           </div>
-        </div>
-      )
+          )
       }
-      
-      
   }
 }
 

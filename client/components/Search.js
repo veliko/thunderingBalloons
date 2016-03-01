@@ -17,9 +17,10 @@ class Search extends React.Component {
         </h4>
         <h4>Who?</h4>
         <AddressList users = {this.props.users}/>
-        <input type='submit' value='Search Places' onClick = {() => searchPlaces(this.props.setStates, this.props.users)}/>
-        <br/><br/>
-        <input type='submit' value='Send Invite' onClick = {() => postEvent(this.props.places, this.props.users)}/>
+        <div style={ {margin: '10px'} }>
+          <input className="btn btn-default" type='submit' value='Search Places' onClick = {() => searchPlaces(this.props.setStates, this.props.users)}/>
+          <input className="btn btn-default" type='submit' value='Send Invite' onClick = {() => postEvent(this.props.places, this.props.users)}/>
+        </div>
       </div> 
   )}
 };
